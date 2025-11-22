@@ -1,10 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
+import GlobalSearch from './GlobalSearch'
 
 const navLinks = [
   { to: '/', label: 'Home' },
   { to: '/compare', label: 'Compare' },
   { to: '/pinouts', label: 'Pinouts' },
   { to: '/circuits', label: 'Circuits' },
+  { to: '/boards', label: 'Boards' },
+  { to: '/reference', label: 'Reference' },
 ]
 
 export default function Layout({ children }) {
@@ -32,26 +35,29 @@ export default function Layout({ children }) {
             <span>ESP32 Ref</span>
           </Link>
 
-          <ul className="flex items-center gap-1">
-            {navLinks.map(({ to, label }) => {
-              const isActive = location.pathname === to ||
-                (to !== '/' && location.pathname.startsWith(to))
-              return (
-                <li key={to}>
-                  <Link
-                    to={to}
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      isActive
-                        ? 'bg-accent-blue/20 text-accent-blue'
-                        : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                    }`}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
+          <div className="flex items-center gap-4">
+            <GlobalSearch />
+            <ul className="flex items-center gap-1">
+              {navLinks.map(({ to, label }) => {
+                const isActive = location.pathname === to ||
+                  (to !== '/' && location.pathname.startsWith(to))
+                return (
+                  <li key={to}>
+                    <Link
+                      to={to}
+                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                        isActive
+                          ? 'bg-accent-blue/20 text-accent-blue'
+                          : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
         </nav>
       </header>
 
