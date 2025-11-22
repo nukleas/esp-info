@@ -90,6 +90,88 @@ export const circuitSchematics = {
     ),
   },
 
+  'power-3v3-mcp1700': {
+    width: 400,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={200} y={20} text="MCP1700 Ultra Low-Power LDO" size={12} />
+
+        {/* Battery Input */}
+        <Label x={35} y={55} text="3.7V" size={10} color={colors.power} />
+        <Label x={35} y={68} text="LiPo" size={7} color={colors.muted} />
+        <Wire points={[{ x: 55, y: 55 }, { x: 70, y: 55 }]} color={colors.power} />
+
+        {/* Input capacitor C1 - ceramic */}
+        <Junction x={70} y={55} color={colors.power} />
+        <Components.Capacitor x={40} y={55} value="1uF" label="C1" />
+        <Wire points={[{ x: 70, y: 85 }, { x: 70, y: 130 }]} />
+
+        {/* Wire to regulator */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 70, y: 55 }, { x: 140, y: 55 }]} color={colors.power} speed={2} />
+        ) : (
+          <Wire points={[{ x: 70, y: 55 }, { x: 140, y: 55 }]} color={colors.power} />
+        )}
+
+        {/* MCP1700 Regulator - TO-92 style */}
+        <g style={{ filter: 'drop-shadow(0 0 6px rgba(0, 255, 170, 0.4))' }}>
+          {/* TO-92 package body */}
+          <path d="M 140,40 L 140,80 Q 175,90 210,80 L 210,40 Q 175,35 140,40" fill="#1a2332" stroke="#00ffaa" strokeWidth={2} />
+          <text x={175} y={55} fontSize={8} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">MCP1700</text>
+          <text x={175} y={68} fontSize={7} fontFamily="JetBrains Mono" fill={colors.muted} textAnchor="middle">3.3V</text>
+          {/* Pin labels inside */}
+          <text x={150} y={82} fontSize={5} fill={colors.muted}>VIN</text>
+          <text x={175} y={88} fontSize={5} fill={colors.muted} textAnchor="middle">GND</text>
+          <text x={200} y={82} fontSize={5} fill={colors.muted} textAnchor="end">VOUT</text>
+        </g>
+
+        {/* Output wire */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 210, y: 55 }, { x: 280, y: 55 }]} color="#00ffaa" speed={2} delay={0.5} />
+        ) : (
+          <Wire points={[{ x: 210, y: 55 }, { x: 280, y: 55 }]} color="#00ffaa" />
+        )}
+
+        {/* Output capacitor C2 - ceramic */}
+        <Junction x={280} y={55} color="#00ffaa" />
+        <Components.Capacitor x={250} y={55} value="1uF" label="C2" />
+        <Wire points={[{ x: 280, y: 85 }, { x: 280, y: 130 }]} />
+
+        {/* Bulk capacitor for WiFi - shown as optional */}
+        <Junction x={330} y={55} color="#00ffaa" />
+        <Wire points={[{ x: 280, y: 55 }, { x: 330, y: 55 }]} color="#00ffaa" />
+        <Components.Capacitor x={300} y={55} value="100uF" label="C3" polarized />
+        <Wire points={[{ x: 330, y: 85 }, { x: 330, y: 130 }]} />
+        <text x={330} y={100} fontSize={5} fill={colors.muted} textAnchor="middle">(WiFi</text>
+        <text x={330} y={108} fontSize={5} fill={colors.muted} textAnchor="middle">bursts)</text>
+
+        {/* 3.3V Output label */}
+        <Wire points={[{ x: 330, y: 55 }, { x: 365, y: 55 }]} color="#00ffaa" />
+        <Label x={370} y={60} text="3.3V" size={10} color="#00ffaa" anchor="start" />
+
+        {/* Ground connections */}
+        <Wire points={[{ x: 70, y: 130 }, { x: 175, y: 130 }]} color={colors.ground} />
+        <Wire points={[{ x: 175, y: 90 }, { x: 175, y: 130 }]} color={colors.ground} />
+        <Wire points={[{ x: 175, y: 130 }, { x: 330, y: 130 }]} color={colors.ground} />
+        <Junction x={175} y={130} color={colors.ground} />
+        <Junction x={280} y={130} color={colors.ground} />
+        <Junction x={330} y={130} color={colors.ground} />
+        <Components.Ground x={200} y={145} />
+
+        {/* Low power indicator */}
+        <rect x={60} y={160} width={120} height={40} rx={4} fill="rgba(0, 255, 170, 0.05)" stroke="rgba(0, 255, 170, 0.2)" strokeWidth={1} />
+        <text x={120} y={177} fontSize={7} fill="#00ffaa" textAnchor="middle">Ultra-Low Iq: 1.6uA</text>
+        <text x={120} y={190} fontSize={6} fill={colors.muted} textAnchor="middle">Ideal for deep sleep</text>
+
+        {/* Specs */}
+        <text x={220} y={175} fontSize={7} fill={colors.muted}>Input: 2.3-6V (LiPo safe)</text>
+        <text x={220} y={188} fontSize={7} fill={colors.muted}>Output: 3.3V @ 250mA</text>
+        <text x={220} y={201} fontSize={7} fill={colors.muted}>Dropout: 178mV @ 250mA</text>
+      </g>
+    ),
+  },
+
   'power-decoupling': {
     width: 400,
     height: 220,
