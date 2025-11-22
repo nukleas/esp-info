@@ -4,13 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This repository contains prompts and specifications for building an ESP32 reference website - an interactive web application that consolidates ESP32 documentation, pinout diagrams, variant comparisons, and common wiring examples.
-
-**Current state:** Documentation/specification only. No code has been implemented yet.
+Interactive ESP32 reference website with pinout diagrams, variant comparisons, and common wiring examples. Static React site deployable to any hosting.
 
 ## Build Commands
-
-Once the project is initialized (React + Vite + Tailwind):
 
 ```bash
 npm install          # Install dependencies
@@ -28,37 +24,38 @@ npm run preview      # Preview production build
 - **Graphics:** SVG for interactive diagrams
 - **Fonts:** JetBrains Mono (code), Inter (body) from Google Fonts
 
-## Implementation Order
+## Adding Content
 
-Follow the phased approach in `00-implementation-guide.md`:
+**Variants:** Edit `src/data/variants.js` - follow the existing object structure with cpu, memory, wireless, peripherals, and power fields.
 
-1. **Phase 1:** Project foundation - React/Vite/Tailwind setup, design system, navigation
-2. **Phase 2:** Home page with ESP32 variant cards
-3. **Phase 3:** Comparison table with sorting/filtering
-4. **Phase 4:** Interactive pinout diagrams (most complex feature)
-5. **Phase 5:** Common circuits library
-6. **Phase 6:** Global search and pin function finder
-7. **Phase 7:** Performance optimization and accessibility
+**Circuits:** Add to the `circuits` array in `src/pages/Circuits.jsx` - includes id, category, title, difficulty, description, components, optional code, and notes.
 
-## Project Structure (Target)
+**Pinouts:** Pin data will live in `src/data/pinouts.js` (not yet created) - see `03-pinout-diagrams.md` for data structure.
+
+## Remaining Work
+
+See `00-implementation-guide.md` for full details:
+- Interactive SVG pinout diagrams (placeholder exists)
+- Global search functionality
+- More circuit examples with SVG schematics
+
+## Project Structure
 
 ```
 src/
 ├── components/
-│   ├── PinoutDiagram.jsx    # Interactive SVG chip diagrams
-│   ├── ComparisonTable.jsx  # Variant comparison with sorting
-│   ├── VariantCard.jsx      # Home page cards
-│   └── SearchBar.jsx        # Global search
+│   ├── Layout.jsx         # Header, nav, footer wrapper
+│   └── VariantCard.jsx    # Home page ESP32 cards
 ├── pages/
-│   ├── Home.jsx
-│   ├── VariantDetail.jsx
-│   ├── Compare.jsx
-│   └── Circuits.jsx
+│   ├── Home.jsx           # Landing page with variant grid
+│   ├── Compare.jsx        # Side-by-side spec table
+│   ├── Pinouts.jsx        # Interactive diagrams (WIP)
+│   └── Circuits.jsx       # Wiring examples library
 ├── data/
-│   ├── variants.js          # ESP32 variant specs
-│   ├── pinouts.js           # Pin data for each variant
-│   └── circuits.js          # Wiring examples
-└── App.jsx
+│   └── variants.js        # ESP32 variant specs (easy to edit)
+├── App.jsx                # Routes
+├── main.jsx               # Entry point
+└── index.css              # Tailwind + custom styles
 ```
 
 ## Design System

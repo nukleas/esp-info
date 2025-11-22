@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #121825;
+  --bg-tertiary: #1a2332;
+  --accent-blue: #00d4ff;
+  --accent-cyan: #00ffaa;
+  --accent-purple: #b794f6;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --glow-blue: rgba(0, 212, 255, 0.4);
+  --glow-cyan: rgba(0, 255, 170, 0.4);
+  --border: rgba(0, 212, 255, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: rgba(0, 212, 255, 0.3);
+  color: var(--text-primary);
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-tertiary border border-white/10 rounded-lg p-6;
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .card:hover {
+    @apply border-accent-blue/40 shadow-glow-blue;
+  }
+
+  .btn-primary {
+    @apply bg-accent-blue text-bg-primary px-4 py-2 rounded-md font-medium;
+    @apply transition-all duration-200 ease-in-out;
+    @apply hover:shadow-glow-blue hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border border-accent-blue text-accent-blue px-4 py-2 rounded-md font-medium;
+    @apply transition-all duration-200 ease-in-out;
+    @apply hover:bg-accent-blue/20;
+  }
+}
