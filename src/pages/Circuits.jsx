@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { circuits, categories, difficultyLevels, allTags } from '../data/circuits'
+import { circuits, categories, difficultyLevels } from '../data/circuits'
 import CircuitDiagram from '../components/CircuitDiagram'
 import { getCircuitSchematic, hasSchematic } from '../data/circuitSchematics'
 
