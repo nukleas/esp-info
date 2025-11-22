@@ -361,6 +361,69 @@ export const circuitSchematics = {
   },
 
   // ============================================
+  // PROGRAMMING CIRCUITS
+  // ============================================
+
+  'boot-reset-buttons': {
+    width: 350,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={175} y={20} text="Boot and Reset Buttons" size={12} />
+
+        {/* 3.3V Power */}
+        <Components.Power x={100} y={40} voltage="3.3V" />
+        <Wire points={[{ x: 100, y: 55 }, { x: 100, y: 70 }]} color={colors.power} />
+
+        {/* EN pin pull-up resistor */}
+        <Junction x={100} y={70} color={colors.power} />
+        <Components.Resistor x={70} y={70} value="10K" label="R1" />
+        <Wire points={[{ x: 100, y: 100 }, { x: 100, y: 115 }]} />
+
+        {/* Junction to ESP32 EN */}
+        <Junction x={100} y={115} />
+        <Wire points={[{ x: 100, y: 115 }, { x: 200, y: 115 }]} color={colors.gpio} />
+
+        {/* RESET Button */}
+        <Wire points={[{ x: 100, y: 115 }, { x: 100, y: 130 }]} />
+        <Components.Button x={70} y={130} label="RESET" />
+        <Wire points={[{ x: 100, y: 160 }, { x: 100, y: 190 }]} />
+
+        {/* Debounce cap */}
+        <Junction x={140} y={115} />
+        <Components.Capacitor x={110} y={115} value="100nF" label="C1" />
+        <Wire points={[{ x: 140, y: 145 }, { x: 140, y: 190 }]} />
+
+        {/* ESP32 */}
+        <rect x={200} y={90} width={80} height={70} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.4))' }} />
+        <text x={240} y={120} fontSize={9} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={205} y={105} fontSize={6} fill={colors.muted}>EN</text>
+        <text x={205} y={150} fontSize={6} fill={colors.muted}>GPIO0</text>
+
+        {/* GPIO0 line (internal pullup shown) */}
+        <Wire points={[{ x: 200, y: 145 }, { x: 180, y: 145 }]} color={colors.gpio} />
+        <rect x={165} y={135} width={20} height={20} rx={2} fill="none" stroke={colors.muted} strokeWidth={1} strokeDasharray="3,2" />
+        <text x={175} y={148} fontSize={5} fill={colors.muted} textAnchor="middle">Int.</text>
+
+        {/* BOOT Button */}
+        <Wire points={[{ x: 165, y: 145 }, { x: 60, y: 145 }]} />
+        <Components.Button x={30} y={130} label="BOOT" />
+        <Wire points={[{ x: 60, y: 160 }, { x: 60, y: 190 }]} />
+
+        {/* Ground rail */}
+        <Wire points={[{ x: 60, y: 190 }, { x: 240, y: 190 }]} color={colors.ground} />
+        <Junction x={100} y={190} color={colors.ground} />
+        <Junction x={140} y={190} color={colors.ground} />
+        <Components.Ground x={150} y={205} />
+
+        {/* Labels */}
+        <text x={280} y={200} fontSize={7} fill={colors.muted}>Hold BOOT + Press RESET</text>
+        <text x={280} y={212} fontSize={7} fill={colors.muted}>= Enter bootloader</text>
+      </g>
+    ),
+  },
+
+  // ============================================
   // INPUT CIRCUITS
   // ============================================
 
@@ -403,6 +466,115 @@ export const circuitSchematics = {
         {/* State indicator */}
         <text x={220} y={145} fontSize={7} fill={colors.muted}>Pressed: LOW</text>
         <text x={220} y={157} fontSize={7} fill={colors.muted}>Released: HIGH</text>
+      </g>
+    ),
+  },
+
+  'input-button-interrupt': {
+    width: 340,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={170} y={20} text="Button with Hardware Interrupt" size={11} />
+
+        {/* 3.3V Power */}
+        <Components.Power x={80} y={40} voltage="3.3V" />
+        <Wire points={[{ x: 80, y: 55 }, { x: 80, y: 70 }]} color={colors.power} />
+
+        {/* Internal pullup (shown as dotted) */}
+        <rect x={65} y={70} width={30} height={35} rx={2} fill="none" stroke={colors.muted} strokeWidth={1} strokeDasharray="4,2" />
+        <text x={80} y={85} fontSize={5} fill={colors.muted} textAnchor="middle">Internal</text>
+        <text x={80} y={95} fontSize={5} fill={colors.muted} textAnchor="middle">~45K</text>
+
+        {/* Junction point */}
+        <Wire points={[{ x: 80, y: 105 }, { x: 80, y: 120 }]} />
+        <Junction x={80} y={120} />
+
+        {/* To GPIO with interrupt symbol */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 80, y: 120 }, { x: 180, y: 120 }]} color={colors.gpio} speed={3} />
+        ) : (
+          <Wire points={[{ x: 80, y: 120 }, { x: 180, y: 120 }]} color={colors.gpio} />
+        )}
+
+        {/* Interrupt indicator */}
+        <g style={{ filter: 'drop-shadow(0 0 4px rgba(239, 68, 68, 0.6))' }}>
+          <circle cx={140} cy={120} r={12} fill="none" stroke="#ef4444" strokeWidth={2} />
+          <text x={140} y={124} fontSize={8} fontFamily="JetBrains Mono" fill="#ef4444" textAnchor="middle">INT</text>
+          {animated && (
+            <circle cx={140} cy={120} r={12} fill="none" stroke="#ef4444" strokeWidth={2}>
+              <animate attributeName="r" values="12;18;12" dur="1s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite" />
+            </circle>
+          )}
+        </g>
+
+        {/* ESP32 */}
+        <rect x={180} y={100} width={70} height={45} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={215} y={120} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={215} y={135} fontSize={7} fill={colors.muted} textAnchor="middle">GPIO4</text>
+
+        {/* Button */}
+        <Wire points={[{ x: 80, y: 120 }, { x: 80, y: 135 }]} />
+        <Components.Button x={50} y={135} label="SW1" />
+
+        {/* Ground */}
+        <Wire points={[{ x: 80, y: 165 }, { x: 80, y: 190 }]} />
+        <Components.Ground x={80} y={190} />
+
+        {/* ISR info */}
+        <rect x={180} y={160} width={130} height={45} rx={4} fill="rgba(239, 68, 68, 0.05)" stroke="rgba(239, 68, 68, 0.3)" strokeWidth={1} />
+        <text x={245} y={178} fontSize={7} fill="#ef4444" textAnchor="middle" fontFamily="JetBrains Mono">IRAM_ATTR ISR</text>
+        <text x={245} y={192} fontSize={6} fill={colors.muted} textAnchor="middle">FALLING edge trigger</text>
+      </g>
+    ),
+  },
+
+  'input-touch-sensor': {
+    width: 340,
+    height: 200,
+    render: ({ animated }) => (
+      <g>
+        <Label x={170} y={20} text="Capacitive Touch Sensor" size={11} />
+
+        {/* ESP32 */}
+        <rect x={60} y={70} width={80} height={60} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.4))' }} />
+        <text x={100} y={95} fontSize={9} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={100} y={110} fontSize={7} fill={colors.muted} textAnchor="middle">T0 (GPIO4)</text>
+
+        {/* Wire to touch pad */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 140, y: 100 }, { x: 180, y: 100 }]} color="#a855f7" speed={2} />
+        ) : (
+          <Wire points={[{ x: 140, y: 100 }, { x: 180, y: 100 }]} color="#a855f7" />
+        )}
+
+        {/* Touch pad */}
+        <g style={{ filter: 'drop-shadow(0 0 8px rgba(168, 85, 247, 0.5))' }}>
+          <rect x={180} y={70} width={80} height={60} rx={8} fill="#1a2332" stroke="#a855f7" strokeWidth={2} />
+          <rect x={190} y={80} width={60} height={40} rx={4} fill="rgba(168, 85, 247, 0.1)" stroke="#a855f7" strokeWidth={1} />
+          <text x={220} y={105} fontSize={8} fontFamily="JetBrains Mono" fill="#a855f7" textAnchor="middle">TOUCH</text>
+          {animated && (
+            <rect x={190} y={80} width={60} height={40} rx={4} fill="none" stroke="#a855f7" strokeWidth={2}>
+              <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" />
+            </rect>
+          )}
+        </g>
+
+        {/* Finger icon when animated */}
+        {animated && (
+          <g>
+            <ellipse cx={220} cy={65} rx={12} ry={8} fill="rgba(168, 85, 247, 0.3)" stroke="#a855f7" strokeWidth={1}>
+              <animate attributeName="cy" values="65;75;65" dur="2s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+            </ellipse>
+          </g>
+        )}
+
+        {/* Touch pins list */}
+        <rect x={60} y={145} width={200} height={40} rx={4} fill="rgba(168, 85, 247, 0.05)" stroke="rgba(168, 85, 247, 0.2)" strokeWidth={1} />
+        <text x={160} y={162} fontSize={7} fill="#a855f7" textAnchor="middle" fontFamily="JetBrains Mono">Touch Pins: T0-T9</text>
+        <text x={160} y={175} fontSize={6} fill={colors.muted} textAnchor="middle">GPIO4, 0, 2, 15, 13, 12, 14, 27, 33, 32</text>
       </g>
     ),
   },
@@ -503,6 +675,133 @@ export const circuitSchematics = {
         {/* Calculation */}
         <text x={160} y={150} fontSize={7} fill={colors.muted} textAnchor="middle">R = (3.3V - 2.0V) / 10mA = 130R min</text>
         <text x={160} y={162} fontSize={7} fill={colors.muted} textAnchor="middle">Use 330R for ~4mA (safe, visible)</text>
+      </g>
+    ),
+  },
+
+  'output-led-pwm': {
+    width: 360,
+    height: 200,
+    render: ({ animated }) => (
+      <g>
+        <Label x={180} y={20} text="LED PWM Dimming" size={11} />
+
+        {/* ESP32 */}
+        <rect x={40} y={75} width={70} height={50} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={75} y={95} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={75} y={110} fontSize={7} fill={colors.muted} textAnchor="middle">PWM CH0</text>
+
+        {/* PWM wave visualization */}
+        <g>
+          <rect x={120} y={70} width={60} height={60} rx={4} fill="rgba(0, 212, 255, 0.05)" stroke="rgba(0, 212, 255, 0.3)" strokeWidth={1} />
+          <text x={150} y={85} fontSize={6} fill={colors.wire} textAnchor="middle">PWM Signal</text>
+          {/* PWM waveform */}
+          <path d="M 130 115 L 130 95 L 140 95 L 140 115 L 150 115 L 150 95 L 160 95 L 160 115 L 170 115"
+                fill="none" stroke={colors.wire} strokeWidth={1.5} />
+          {animated && (
+            <rect x={130} y={95} width={40} height={20} fill="rgba(0, 212, 255, 0.2)">
+              <animate attributeName="x" values="130;140;130" dur="0.5s" repeatCount="indefinite" />
+            </rect>
+          )}
+        </g>
+
+        {/* Wire from PWM to resistor */}
+        <Wire points={[{ x: 110, y: 100 }, { x: 120, y: 100 }]} color={colors.gpio} />
+        <Wire points={[{ x: 180, y: 100 }, { x: 200, y: 100 }]} color={colors.gpio} />
+
+        {/* Resistor */}
+        <Components.Resistor x={200} y={100} value="220R" label="R1" horizontal />
+
+        {/* Wire to LED */}
+        <Wire points={[{ x: 260, y: 100 }, { x: 280, y: 100 }]} />
+
+        {/* LED with variable brightness */}
+        <g>
+          <Components.LED x={280} y={100} color="#ef4444" label="LED" horizontal />
+          {animated && (
+            <circle cx={295} cy={100} r={15} fill="#ef4444" fillOpacity={0.3} style={{ filter: 'blur(8px)' }}>
+              <animate attributeName="fill-opacity" values="0.1;0.6;0.1" dur="2s" repeatCount="indefinite" />
+            </circle>
+          )}
+        </g>
+
+        {/* Ground */}
+        <Wire points={[{ x: 340, y: 100 }, { x: 340, y: 150 }]} />
+        <Components.Ground x={340} y={160} />
+
+        {/* PWM info */}
+        <text x={180} y={175} fontSize={7} fill={colors.muted} textAnchor="middle">Frequency: 5kHz | Resolution: 8-bit (0-255)</text>
+        <text x={180} y={188} fontSize={6} fill="#00ffaa" textAnchor="middle">ledcWrite(channel, dutyCycle)</text>
+      </g>
+    ),
+  },
+
+  'output-relay': {
+    width: 380,
+    height: 240,
+    render: ({ animated }) => (
+      <g>
+        <Label x={190} y={20} text="Relay Module Control" size={11} />
+
+        {/* ESP32 */}
+        <rect x={40} y={90} width={60} height={45} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={70} y={110} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={70} y={125} fontSize={7} fill={colors.muted} textAnchor="middle">GPIO26</text>
+
+        {/* Signal wire */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 100, y: 112 }, { x: 140, y: 112 }]} color={colors.gpio} speed={2} />
+        ) : (
+          <Wire points={[{ x: 100, y: 112 }, { x: 140, y: 112 }]} color={colors.gpio} />
+        )}
+
+        {/* Relay module */}
+        <rect x={140} y={50} width={100} height={130} rx={4} fill="#1a2332" stroke="#00ffaa" strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(0, 255, 170, 0.4))' }} />
+        <text x={190} y={70} fontSize={9} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">RELAY</text>
+        <text x={190} y={85} fontSize={7} fill={colors.muted} textAnchor="middle">Module</text>
+
+        {/* Relay coil symbol */}
+        <rect x={165} y={95} width={50} height={30} rx={2} fill="none" stroke={colors.wire} strokeWidth={1} />
+        <text x={190} y={115} fontSize={7} fill={colors.wire} textAnchor="middle">COIL</text>
+
+        {/* LED indicator */}
+        <circle cx={155} cy={145} r={5} fill="#ef4444" fillOpacity={0.4} stroke="#ef4444" strokeWidth={1}>
+          {animated && <animate attributeName="fill-opacity" values="0.4;1;0.4" dur="1s" repeatCount="indefinite" />}
+        </circle>
+        <text x={155} y={160} fontSize={5} fill={colors.muted} textAnchor="middle">LED</text>
+
+        {/* Module pin labels */}
+        <text x={145} y={110} fontSize={6} fill={colors.muted}>IN</text>
+        <text x={145} y={175} fontSize={6} fill={colors.muted}>GND</text>
+        <text x={230} y={65} fontSize={6} fill={colors.muted} textAnchor="end">VCC</text>
+
+        {/* 5V power */}
+        <Wire points={[{ x: 225, y: 50 }, { x: 225, y: 35 }]} color={colors.power} />
+        <Label x={225} y={30} text="5V" size={8} color={colors.power} />
+
+        {/* Output contacts */}
+        <rect x={260} y={80} width={90} height={80} rx={4} fill="rgba(239, 68, 68, 0.05)" stroke="rgba(239, 68, 68, 0.3)" strokeWidth={1} />
+        <text x={305} y={98} fontSize={7} fill={colors.power} textAnchor="middle">AC/DC Load</text>
+
+        {/* Contact terminals */}
+        <Wire points={[{ x: 240, y: 110 }, { x: 270, y: 110 }]} />
+        <text x={275} y={113} fontSize={6} fill={colors.muted}>COM</text>
+        <Wire points={[{ x: 240, y: 130 }, { x: 270, y: 130 }]} />
+        <text x={275} y={133} fontSize={6} fill={colors.muted}>NO</text>
+        <Wire points={[{ x: 240, y: 150 }, { x: 270, y: 150 }]} />
+        <text x={275} y={153} fontSize={6} fill={colors.muted}>NC</text>
+
+        {/* Load connection */}
+        <Wire points={[{ x: 305, y: 110 }, { x: 340, y: 110 }]} color={colors.power} />
+        <Wire points={[{ x: 305, y: 130 }, { x: 340, y: 130 }]} color={colors.power} />
+        <text x={345} y={120} fontSize={7} fill={colors.muted}>Load</text>
+
+        {/* Ground */}
+        <Wire points={[{ x: 140, y: 170 }, { x: 70, y: 170 }, { x: 70, y: 200 }]} color={colors.ground} />
+        <Components.Ground x={70} y={210} />
+
+        {/* Warning */}
+        <text x={190} y={225} fontSize={6} fill="#ef4444" textAnchor="middle">⚠ Active LOW: LOW = ON</text>
       </g>
     ),
   },
@@ -720,6 +1019,219 @@ export const circuitSchematics = {
     ),
   },
 
+  'comm-spi': {
+    width: 420,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={210} y={20} text="SPI Bus with Multiple Devices" size={11} />
+
+        {/* ESP32 */}
+        <rect x={40} y={70} width={80} height={100} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.4))' }} />
+        <text x={80} y={95} fontSize={9} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={80} y={115} fontSize={6} fill={colors.muted} textAnchor="middle">VSPI</text>
+
+        {/* Pin labels */}
+        <text x={115} y={90} fontSize={6} fill={colors.muted}>MOSI (23)</text>
+        <text x={115} y={105} fontSize={6} fill={colors.muted}>MISO (19)</text>
+        <text x={115} y={120} fontSize={6} fill={colors.muted}>CLK (18)</text>
+        <text x={115} y={140} fontSize={6} fill={colors.muted}>CS1 (5)</text>
+        <text x={115} y={155} fontSize={6} fill={colors.muted}>CS2 (15)</text>
+
+        {/* SPI bus lines */}
+        {animated ? (
+          <>
+            <AnimatedWire points={[{ x: 120, y: 85 }, { x: 380, y: 85 }]} color="#ef4444" speed={3} />
+            <AnimatedWire points={[{ x: 120, y: 100 }, { x: 380, y: 100 }]} color="#22c55e" speed={3} delay={0.5} />
+          </>
+        ) : (
+          <>
+            <Wire points={[{ x: 120, y: 85 }, { x: 380, y: 85 }]} color="#ef4444" />
+            <Wire points={[{ x: 120, y: 100 }, { x: 380, y: 100 }]} color="#22c55e" />
+          </>
+        )}
+        <Wire points={[{ x: 120, y: 115 }, { x: 380, y: 115 }]} color="#f59e0b" />
+
+        {/* Bus labels */}
+        <text x={385} y={88} fontSize={6} fill="#ef4444">MOSI</text>
+        <text x={385} y={103} fontSize={6} fill="#22c55e">MISO</text>
+        <text x={385} y={118} fontSize={6} fill="#f59e0b">CLK</text>
+
+        {/* Device 1 - SD Card */}
+        <rect x={200} y={140} width={70} height={50} rx={4} fill="#1a2332" stroke="#00ffaa" strokeWidth={2} />
+        <text x={235} y={162} fontSize={7} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">SD Card</text>
+        <text x={235} y={178} fontSize={6} fill={colors.muted} textAnchor="middle">CS: GPIO5</text>
+
+        {/* CS1 line */}
+        <Wire points={[{ x: 120, y: 137 }, { x: 235, y: 137 }, { x: 235, y: 140 }]} color="#a855f7" />
+        <Junction x={235} y={85} color="#ef4444" />
+        <Junction x={235} y={100} color="#22c55e" />
+        <Junction x={235} y={115} color="#f59e0b" />
+        <Wire points={[{ x: 235, y: 85 }, { x: 235, y: 140 }]} color={colors.muted} strokeDasharray="2,2" />
+
+        {/* Device 2 - Display */}
+        <rect x={310} y={140} width={70} height={50} rx={4} fill="#1a2332" stroke="#00ffaa" strokeWidth={2} />
+        <text x={345} y={162} fontSize={7} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">Display</text>
+        <text x={345} y={178} fontSize={6} fill={colors.muted} textAnchor="middle">CS: GPIO15</text>
+
+        {/* CS2 line */}
+        <Wire points={[{ x: 120, y: 152 }, { x: 160, y: 152 }, { x: 160, y: 200 }, { x: 345, y: 200 }, { x: 345, y: 190 }]} color="#ec4899" />
+        <Junction x={345} y={85} color="#ef4444" />
+        <Junction x={345} y={100} color="#22c55e" />
+        <Junction x={345} y={115} color="#f59e0b" />
+        <Wire points={[{ x: 345, y: 85 }, { x: 345, y: 140 }]} color={colors.muted} strokeDasharray="2,2" />
+
+        {/* Note */}
+        <text x={210} y={212} fontSize={6} fill={colors.muted} textAnchor="middle">CS pins select which device is active (LOW = selected)</text>
+      </g>
+    ),
+  },
+
+  'comm-uart-level-shift': {
+    width: 400,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={200} y={20} text="UART Level Shifting (3.3V ↔ 5V)" size={11} />
+
+        {/* ESP32 */}
+        <rect x={40} y={80} width={70} height={60} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={75} y={105} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={75} y={120} fontSize={6} fill={colors.muted} textAnchor="middle">3.3V Logic</text>
+
+        {/* ESP32 pin labels */}
+        <text x={105} y={95} fontSize={6} fill={colors.muted}>TX (17)</text>
+        <text x={105} y={125} fontSize={6} fill={colors.muted}>RX (16)</text>
+
+        {/* Level shifter */}
+        <rect x={160} y={60} width={80} height={100} rx={4} fill="#1a2332" stroke="#f59e0b" strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.4))' }} />
+        <text x={200} y={85} fontSize={8} fontFamily="JetBrains Mono" fill="#f59e0b" textAnchor="middle">Level</text>
+        <text x={200} y={100} fontSize={8} fontFamily="JetBrains Mono" fill="#f59e0b" textAnchor="middle">Shifter</text>
+        <text x={200} y={115} fontSize={6} fill={colors.muted} textAnchor="middle">BSS138</text>
+
+        {/* LV/HV labels */}
+        <text x={165} y={75} fontSize={5} fill={colors.muted}>LV</text>
+        <text x={230} y={75} fontSize={5} fill={colors.muted} textAnchor="end">HV</text>
+        <text x={165} y={155} fontSize={5} fill={colors.muted}>3.3V</text>
+        <text x={230} y={155} fontSize={5} fill={colors.muted} textAnchor="end">5V</text>
+
+        {/* TX path */}
+        {animated ? (
+          <>
+            <AnimatedWire points={[{ x: 110, y: 90 }, { x: 160, y: 90 }]} color={colors.gpio} speed={2} />
+            <AnimatedWire points={[{ x: 240, y: 90 }, { x: 290, y: 90 }]} color={colors.power} speed={2} delay={0.3} />
+          </>
+        ) : (
+          <>
+            <Wire points={[{ x: 110, y: 90 }, { x: 160, y: 90 }]} color={colors.gpio} />
+            <Wire points={[{ x: 240, y: 90 }, { x: 290, y: 90 }]} color={colors.power} />
+          </>
+        )}
+
+        {/* RX path with voltage divider */}
+        <Wire points={[{ x: 110, y: 125 }, { x: 130, y: 125 }]} color={colors.gpio} />
+        <Junction x={130} y={125} />
+
+        {/* Voltage divider */}
+        <Wire points={[{ x: 130, y: 125 }, { x: 130, y: 140 }]} />
+        <Components.Resistor x={100} y={140} value="2K" label="R2" />
+        <Wire points={[{ x: 130, y: 170 }, { x: 130, y: 190 }]} />
+
+        <Wire points={[{ x: 130, y: 125 }, { x: 145, y: 125 }]} />
+        <Components.Resistor x={145} y={95} value="1K" label="R1" />
+        {animated ? (
+          <AnimatedWire points={[{ x: 145, y: 125 }, { x: 290, y: 125 }]} color={colors.power} speed={2} delay={0.6} />
+        ) : (
+          <Wire points={[{ x: 145, y: 125 }, { x: 290, y: 125 }]} color={colors.power} />
+        )}
+
+        {/* 5V Device */}
+        <rect x={290} y={80} width={70} height={60} rx={4} fill="#1a2332" stroke={colors.power} strokeWidth={2} />
+        <text x={325} y={105} fontSize={8} fontFamily="JetBrains Mono" fill={colors.power} textAnchor="middle">5V</text>
+        <text x={325} y={120} fontSize={6} fill={colors.muted} textAnchor="middle">Device</text>
+
+        {/* Device pin labels */}
+        <text x={285} y={93} fontSize={6} fill={colors.muted} textAnchor="end">RX</text>
+        <text x={285} y={128} fontSize={6} fill={colors.muted} textAnchor="end">TX</text>
+
+        {/* Ground */}
+        <Wire points={[{ x: 130, y: 190 }, { x: 200, y: 190 }]} color={colors.ground} />
+        <Components.Ground x={165} y={205} />
+
+        {/* Voltage divider note */}
+        <rect x={40} y={175} width={80} height={30} rx={3} fill="rgba(0, 212, 255, 0.05)" stroke="rgba(0, 212, 255, 0.2)" strokeWidth={1} />
+        <text x={80} y={190} fontSize={5} fill={colors.wire} textAnchor="middle">5V × 2K/(1K+2K)</text>
+        <text x={80} y={200} fontSize={5} fill={colors.muted} textAnchor="middle">= 3.3V</text>
+      </g>
+    ),
+  },
+
+  'comm-sd-card': {
+    width: 400,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={200} y={20} text="MicroSD Card (SPI Mode)" size={11} />
+
+        {/* ESP32 */}
+        <rect x={40} y={70} width={80} height={90} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.4))' }} />
+        <text x={80} y={95} fontSize={9} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={80} y={110} fontSize={6} fill={colors.muted} textAnchor="middle">VSPI</text>
+
+        {/* Pin labels */}
+        <text x={115} y={90} fontSize={6} fill={colors.muted}>GPIO23</text>
+        <text x={115} y={105} fontSize={6} fill={colors.muted}>GPIO19</text>
+        <text x={115} y={120} fontSize={6} fill={colors.muted}>GPIO18</text>
+        <text x={115} y={140} fontSize={6} fill={colors.muted}>GPIO5</text>
+
+        {/* SPI lines */}
+        {animated ? (
+          <>
+            <AnimatedWire points={[{ x: 120, y: 87 }, { x: 220, y: 87 }]} color="#ef4444" speed={2.5} />
+            <AnimatedWire points={[{ x: 120, y: 102 }, { x: 220, y: 102 }]} color="#22c55e" speed={2.5} delay={0.3} />
+          </>
+        ) : (
+          <>
+            <Wire points={[{ x: 120, y: 87 }, { x: 220, y: 87 }]} color="#ef4444" />
+            <Wire points={[{ x: 120, y: 102 }, { x: 220, y: 102 }]} color="#22c55e" />
+          </>
+        )}
+        <Wire points={[{ x: 120, y: 117 }, { x: 220, y: 117 }]} color="#f59e0b" />
+        <Wire points={[{ x: 120, y: 137 }, { x: 220, y: 137 }]} color="#a855f7" />
+
+        {/* MicroSD Module */}
+        <rect x={220} y={55} width={130} height={110} rx={4} fill="#1a2332" stroke="#00ffaa" strokeWidth={2} style={{ filter: 'drop-shadow(0 0 8px rgba(0, 255, 170, 0.4))' }} />
+        <text x={285} y={80} fontSize={9} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">MicroSD</text>
+        <text x={285} y={95} fontSize={7} fill={colors.muted} textAnchor="middle">Module</text>
+
+        {/* SD card slot representation */}
+        <rect x={250} y={105} width={70} height={45} rx={2} fill="#0a0e17" stroke={colors.muted} strokeWidth={1} />
+        <rect x={255} y={110} width={60} height={35} rx={1} fill="rgba(0, 255, 170, 0.1)" stroke="#00ffaa" strokeWidth={1} />
+        <text x={285} y={132} fontSize={7} fill="#00ffaa" textAnchor="middle">SD</text>
+
+        {/* Module pin labels */}
+        <text x={225} y={90} fontSize={5} fill="#ef4444">MOSI</text>
+        <text x={225} y={105} fontSize={5} fill="#22c55e">MISO</text>
+        <text x={225} y={120} fontSize={5} fill="#f59e0b">SCK</text>
+        <text x={225} y={140} fontSize={5} fill="#a855f7">CS</text>
+        <text x={225} y={160} fontSize={5} fill={colors.power}>VCC</text>
+        <text x={345} y={160} fontSize={5} fill={colors.ground} textAnchor="end">GND</text>
+
+        {/* Power */}
+        <Wire points={[{ x: 220, y: 157 }, { x: 180, y: 157 }, { x: 180, y: 50 }]} color={colors.power} />
+        <Label x={180} y={45} text="3.3V" size={7} color={colors.power} />
+
+        {/* Ground */}
+        <Wire points={[{ x: 340, y: 157 }, { x: 360, y: 157 }, { x: 360, y: 190 }]} color={colors.ground} />
+        <Components.Ground x={360} y={200} />
+
+        {/* Info */}
+        <text x={80} y={185} fontSize={6} fill={colors.muted}>FAT32 formatted</text>
+        <text x={80} y={197} fontSize={6} fill={colors.muted}>Max 32GB recommended</text>
+      </g>
+    ),
+  },
+
   // ============================================
   // SENSOR CIRCUITS
   // ============================================
@@ -773,6 +1285,244 @@ export const circuitSchematics = {
         {/* Ground */}
         <Wire points={[{ x: 237, y: 150 }, { x: 237, y: 180 }, { x: 280, y: 180 }]} color={colors.ground} />
         <Components.Ground x={280} y={190} />
+      </g>
+    ),
+  },
+
+  'sensor-bme280': {
+    width: 380,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={190} y={20} text="BME280 Environment Sensor (I2C)" size={11} />
+
+        {/* 3.3V Power */}
+        <Components.Power x={60} y={40} voltage="3.3V" />
+        <Wire points={[{ x: 60, y: 55 }, { x: 60, y: 75 }]} color={colors.power} />
+
+        {/* Power rail */}
+        <Wire points={[{ x: 60, y: 75 }, { x: 200, y: 75 }]} color={colors.power} />
+        <Junction x={100} y={75} color={colors.power} />
+        <Junction x={140} y={75} color={colors.power} />
+
+        {/* Pull-up resistors */}
+        <Components.Resistor x={70} y={75} value="4.7K" label="SDA" />
+        <Components.Resistor x={110} y={75} value="4.7K" label="SCL" />
+        <Wire points={[{ x: 100, y: 105 }, { x: 100, y: 120 }]} />
+        <Wire points={[{ x: 140, y: 105 }, { x: 140, y: 135 }]} />
+
+        {/* I2C Bus lines */}
+        <Wire points={[{ x: 60, y: 120 }, { x: 280, y: 120 }]} color="#f59e0b" />
+        <Wire points={[{ x: 60, y: 135 }, { x: 280, y: 135 }]} color="#10b981" />
+        <Junction x={100} y={120} color="#f59e0b" />
+        <Junction x={140} y={135} color="#10b981" />
+
+        <text x={55} y={123} fontSize={6} fill="#f59e0b" textAnchor="end">SDA</text>
+        <text x={55} y={138} fontSize={6} fill="#10b981" textAnchor="end">SCL</text>
+
+        {/* ESP32 */}
+        <rect x={40} y={150} width={70} height={50} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={75} y={175} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={50} y={165} fontSize={6} fill={colors.muted}>21</text>
+        <text x={100} y={165} fontSize={6} fill={colors.muted} textAnchor="end">22</text>
+
+        <Wire points={[{ x: 55, y: 150 }, { x: 55, y: 120 }]} color="#f59e0b" />
+        <Wire points={[{ x: 95, y: 150 }, { x: 95, y: 135 }]} color="#10b981" />
+        <Junction x={55} y={120} color="#f59e0b" />
+        <Junction x={95} y={135} color="#10b981" />
+
+        {/* BME280 Module */}
+        <rect x={200} y={90} width={100} height={80} rx={4} fill="#1a2332" stroke="#00ffaa" strokeWidth={2} style={{ filter: 'drop-shadow(0 0 8px rgba(0, 255, 170, 0.4))' }} />
+        <text x={250} y={115} fontSize={10} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">BME280</text>
+        <text x={250} y={130} fontSize={6} fill={colors.muted} textAnchor="middle">Temp/Hum/Press</text>
+
+        {/* Module pins */}
+        <text x={205} y={150} fontSize={5} fill={colors.muted}>VIN</text>
+        <text x={225} y={150} fontSize={5} fill={colors.muted}>GND</text>
+        <text x={250} y={150} fontSize={5} fill={colors.muted}>SDA</text>
+        <text x={280} y={150} fontSize={5} fill={colors.muted}>SCL</text>
+
+        {/* Module connections */}
+        <Wire points={[{ x: 210, y: 155 }, { x: 210, y: 75 }]} color={colors.power} />
+        <Junction x={210} y={75} color={colors.power} />
+        <Wire points={[{ x: 230, y: 155 }, { x: 230, y: 185 }]} color={colors.ground} />
+        <Wire points={[{ x: 255, y: 155 }, { x: 255, y: 120 }]} color="#f59e0b" />
+        <Junction x={255} y={120} color="#f59e0b" />
+        <Wire points={[{ x: 280, y: 155 }, { x: 280, y: 135 }]} color="#10b981" />
+        <Junction x={280} y={135} color="#10b981" />
+
+        {/* Ground */}
+        <Wire points={[{ x: 230, y: 185 }, { x: 150, y: 185 }]} color={colors.ground} />
+        <Components.Ground x={190} y={200} />
+
+        {/* I2C Address */}
+        <rect x={310} y={100} width={60} height={55} rx={4} fill="rgba(0, 255, 170, 0.05)" stroke="rgba(0, 255, 170, 0.2)" strokeWidth={1} />
+        <text x={340} y={118} fontSize={7} fill="#00ffaa" textAnchor="middle">I2C Addr</text>
+        <text x={340} y={133} fontSize={8} fontFamily="JetBrains Mono" fill={colors.text} textAnchor="middle">0x76</text>
+        <text x={340} y={148} fontSize={6} fill={colors.muted} textAnchor="middle">(or 0x77)</text>
+
+        {/* Animated data */}
+        {animated && (
+          <circle r={3} fill="#f59e0b" style={{ filter: 'drop-shadow(0 0 4px #f59e0b)' }}>
+            <animateMotion dur="2s" repeatCount="indefinite" path="M 255 120 L 55 120" />
+          </circle>
+        )}
+      </g>
+    ),
+  },
+
+  'sensor-pir': {
+    width: 360,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={180} y={20} text="PIR Motion Sensor (HC-SR501)" size={11} />
+
+        {/* 5V Power */}
+        <Components.Power x={80} y={40} voltage="5V" />
+        <Wire points={[{ x: 80, y: 55 }, { x: 80, y: 80 }]} color={colors.power} />
+
+        {/* PIR Module */}
+        <g style={{ filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.4))' }}>
+          <rect x={150} y={50} width={100} height={90} rx={4} fill="#1a2332" stroke="#ef4444" strokeWidth={2} />
+
+          {/* Fresnel lens */}
+          <circle cx={200} cy={85} r={25} fill="rgba(239, 68, 68, 0.1)" stroke="#ef4444" strokeWidth={1} />
+          <circle cx={200} cy={85} r={15} fill="rgba(239, 68, 68, 0.2)" stroke="#ef4444" strokeWidth={1} />
+
+          {animated && (
+            <>
+              <circle cx={200} cy={85} r={25} fill="none" stroke="#ef4444" strokeWidth={1}>
+                <animate attributeName="r" values="25;35;25" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite" />
+              </circle>
+            </>
+          )}
+
+          <text x={200} y={120} fontSize={8} fontFamily="JetBrains Mono" fill="#ef4444" textAnchor="middle">HC-SR501</text>
+
+          {/* Module pin labels */}
+          <text x={160} y={145} fontSize={6} fill={colors.muted}>VCC</text>
+          <text x={200} y={145} fontSize={6} fill={colors.muted} textAnchor="middle">OUT</text>
+          <text x={240} y={145} fontSize={6} fill={colors.muted} textAnchor="end">GND</text>
+        </g>
+
+        {/* Power connection */}
+        <Wire points={[{ x: 80, y: 80 }, { x: 165, y: 80 }, { x: 165, y: 140 }]} color={colors.power} />
+
+        {/* Output to GPIO */}
+        <Wire points={[{ x: 200, y: 140 }, { x: 200, y: 160 }]} />
+        {animated ? (
+          <AnimatedWire points={[{ x: 200, y: 160 }, { x: 290, y: 160 }]} color={colors.gpio} speed={2} />
+        ) : (
+          <Wire points={[{ x: 200, y: 160 }, { x: 290, y: 160 }]} color={colors.gpio} />
+        )}
+
+        {/* ESP32 */}
+        <rect x={290} y={140} width={60} height={45} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={320} y={160} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={320} y={175} fontSize={6} fill={colors.muted} textAnchor="middle">GPIO27</text>
+
+        {/* Ground */}
+        <Wire points={[{ x: 235, y: 140 }, { x: 235, y: 190 }]} color={colors.ground} />
+        <Wire points={[{ x: 235, y: 190 }, { x: 140, y: 190 }]} color={colors.ground} />
+        <Components.Ground x={185} y={205} />
+
+        {/* Info box */}
+        <rect x={40} y={155} width={95} height={50} rx={4} fill="rgba(239, 68, 68, 0.05)" stroke="rgba(239, 68, 68, 0.2)" strokeWidth={1} />
+        <text x={87} y={172} fontSize={6} fill="#ef4444" textAnchor="middle">Output: 3.3V</text>
+        <text x={87} y={185} fontSize={6} fill={colors.muted} textAnchor="middle">(ESP32 safe)</text>
+        <text x={87} y={198} fontSize={6} fill={colors.muted} textAnchor="middle">Warm-up: 30s</text>
+      </g>
+    ),
+  },
+
+  'sensor-ultrasonic': {
+    width: 400,
+    height: 240,
+    render: ({ animated }) => (
+      <g>
+        <Label x={200} y={20} text="HC-SR04 Ultrasonic Distance Sensor" size={11} />
+
+        {/* 5V Power */}
+        <Components.Power x={60} y={45} voltage="5V" />
+        <Wire points={[{ x: 60, y: 60 }, { x: 60, y: 75 }]} color={colors.power} />
+
+        {/* HC-SR04 Module */}
+        <rect x={140} y={50} width={120} height={80} rx={4} fill="#1a2332" stroke="#00d4ff" strokeWidth={2} style={{ filter: 'drop-shadow(0 0 8px rgba(0, 212, 255, 0.4))' }} />
+
+        {/* Ultrasonic transducers */}
+        <circle cx={170} cy={85} r={18} fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" strokeWidth={2} />
+        <circle cx={170} cy={85} r={10} fill="rgba(0, 212, 255, 0.2)" />
+        <circle cx={230} cy={85} r={18} fill="rgba(0, 212, 255, 0.1)" stroke="#00d4ff" strokeWidth={2} />
+        <circle cx={230} cy={85} r={10} fill="rgba(0, 212, 255, 0.2)" />
+
+        <text x={170} y={110} fontSize={5} fill={colors.muted} textAnchor="middle">TX</text>
+        <text x={230} y={110} fontSize={5} fill={colors.muted} textAnchor="middle">RX</text>
+
+        <text x={200} y={125} fontSize={8} fontFamily="JetBrains Mono" fill="#00d4ff" textAnchor="middle">HC-SR04</text>
+
+        {/* Sound wave animation */}
+        {animated && (
+          <>
+            <circle cx={170} cy={85} r={18} fill="none" stroke="#00d4ff" strokeWidth={1}>
+              <animate attributeName="r" values="18;40;18" dur="1.5s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="1;0;1" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+          </>
+        )}
+
+        {/* Pin labels */}
+        <text x={150} y={138} fontSize={5} fill={colors.muted}>VCC</text>
+        <text x={175} y={138} fontSize={5} fill={colors.muted}>TRIG</text>
+        <text x={205} y={138} fontSize={5} fill={colors.muted}>ECHO</text>
+        <text x={240} y={138} fontSize={5} fill={colors.muted}>GND</text>
+
+        {/* Power connection */}
+        <Wire points={[{ x: 60, y: 75 }, { x: 155, y: 75 }, { x: 155, y: 130 }]} color={colors.power} />
+
+        {/* Trigger connection */}
+        <Wire points={[{ x: 180, y: 130 }, { x: 180, y: 155 }]} />
+        <Wire points={[{ x: 180, y: 155 }, { x: 290, y: 155 }]} color={colors.gpio} />
+        <text x={235} y={150} fontSize={6} fill={colors.muted}>TRIG → GPIO5</text>
+
+        {/* Echo with voltage divider */}
+        <Wire points={[{ x: 210, y: 130 }, { x: 210, y: 170 }]} />
+        <Junction x={210} y={170} />
+
+        {/* Voltage divider */}
+        <Wire points={[{ x: 210, y: 170 }, { x: 230, y: 170 }]} />
+        <Components.Resistor x={230} y={140} value="1K" label="R1" />
+        <Wire points={[{ x: 230, y: 170 }, { x: 265, y: 170 }]} />
+        <Junction x={265} y={170} />
+
+        <Components.Resistor x={265} y={140} value="2K" label="R2" />
+        <Wire points={[{ x: 265, y: 200 }, { x: 265, y: 215 }]} />
+
+        {/* Echo to GPIO */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 265, y: 170 }, { x: 290, y: 170 }]} color={colors.gpio} speed={2} />
+        ) : (
+          <Wire points={[{ x: 265, y: 170 }, { x: 290, y: 170 }]} color={colors.gpio} />
+        )}
+        <text x={277} y={182} fontSize={6} fill={colors.muted}>GPIO18</text>
+
+        {/* ESP32 */}
+        <rect x={290} y={145} width={70} height={55} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+        <text x={325} y={170} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+        <text x={325} y={185} fontSize={6} fill={colors.muted} textAnchor="middle">3.3V Logic</text>
+
+        {/* Ground */}
+        <Wire points={[{ x: 245, y: 130 }, { x: 245, y: 215 }]} color={colors.ground} />
+        <Wire points={[{ x: 245, y: 215 }, { x: 200, y: 215 }]} color={colors.ground} />
+        <Junction x={265} y={215} color={colors.ground} />
+        <Components.Ground x={220} y={225} />
+
+        {/* Voltage divider note */}
+        <rect x={40} y={170} width={90} height={50} rx={4} fill="rgba(239, 68, 68, 0.05)" stroke="rgba(239, 68, 68, 0.3)" strokeWidth={1} />
+        <text x={85} y={188} fontSize={6} fill="#ef4444" textAnchor="middle">ECHO is 5V!</text>
+        <text x={85} y={200} fontSize={5} fill={colors.muted} textAnchor="middle">Divider: 5V × 2K/3K</text>
+        <text x={85} y={212} fontSize={5} fill="#00ffaa" textAnchor="middle">= 3.3V (safe)</text>
       </g>
     ),
   },
