@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { circuits, categories, difficultyLevels, allTags } from '../data/circuits'
+import CircuitDiagram from '../components/CircuitDiagram'
+import { getCircuitSchematic, hasSchematic } from '../data/circuitSchematics'
 
 const difficultyColors = {
   beginner: 'text-green-400 bg-green-400/20 border-green-400/30',
@@ -246,8 +248,38 @@ export default function Circuits() {
                   </div>
                 )}
 
-                {/* ASCII Schematic */}
-                {circuit.schematicAscii && (
+                {/* Interactive SVG Schematic */}
+                {hasSchematic(circuit.id) && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-accent-cyan mb-3 flex items-center gap-2">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                      </svg>
+                      Interactive Schematic
+                      <span className="ml-2 text-xs font-normal text-accent-blue/60 flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-accent-blue animate-pulse"></span>
+                        Animated
+                      </span>
+                    </h4>
+                    <div className="relative">
+                      {(() => {
+                        const schematic = getCircuitSchematic(circuit.id)
+                        return (
+                          <CircuitDiagram
+                            width={schematic.width}
+                            height={schematic.height}
+                            animated={true}
+                          >
+                            {schematic.render({ animated: true })}
+                          </CircuitDiagram>
+                        )
+                      })()}
+                    </div>
+                  </div>
+                )}
+
+                {/* ASCII Schematic fallback */}
+                {!hasSchematic(circuit.id) && circuit.schematicAscii && (
                   <div>
                     <h4 className="text-sm font-semibold text-accent-cyan mb-3">Schematic</h4>
                     <pre className="bg-bg-primary p-4 rounded-lg overflow-x-auto text-xs font-mono text-text-secondary whitespace-pre">
