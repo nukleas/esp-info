@@ -160,7 +160,7 @@ export const esp32s3Pins = [
   { pin: 2, name: 'EN', type: 'input', voltage: '3.3V', description: 'Chip enable', notes: 'Active high. Pull LOW to reset.', category: ['power', 'special'], side: 'left' },
 
   // ADC1 + Touch pins (GPIO0-10)
-  { pin: 3, name: 'GPIO0', type: 'gpio', voltage: '3.3V', description: 'Strapping - Boot mode', alternateFunctions: ['ADC1_CH0', 'RTC_GPIO0'], notes: 'STRAPPING PIN: Boot mode select. Internal pull-up.', category: ['gpio', 'adc', 'strapping'], strapping: true, strappingValue: 'HIGH for normal boot', side: 'left' },
+  { pin: 3, name: 'GPIO0', type: 'gpio', voltage: '3.3V', description: 'Strapping - Boot mode', alternateFunctions: ['RTC_GPIO0'], notes: 'STRAPPING PIN: Boot mode select. Internal pull-up. No ADC on ESP32-S3.', category: ['gpio', 'strapping'], strapping: true, strappingValue: 'HIGH for normal boot', side: 'left' },
   { pin: 4, name: 'GPIO1', type: 'gpio', voltage: '3.3V', description: 'ADC1 CH0 / Touch1', alternateFunctions: ['ADC1_CH0', 'TOUCH1', 'RTC_GPIO1'], notes: 'Safe to use. Low-level glitch at boot.', category: ['gpio', 'adc', 'touch', 'pwm'], side: 'left' },
   { pin: 5, name: 'GPIO2', type: 'gpio', voltage: '3.3V', description: 'ADC1 CH1 / Touch2', alternateFunctions: ['ADC1_CH1', 'TOUCH2', 'RTC_GPIO2'], notes: 'Safe to use. Low-level glitch at boot.', category: ['gpio', 'adc', 'touch', 'pwm'], side: 'left' },
   { pin: 6, name: 'GPIO3', type: 'gpio', voltage: '3.3V', description: 'Strapping - JTAG', alternateFunctions: ['ADC1_CH2', 'TOUCH3', 'RTC_GPIO3'], notes: 'STRAPPING PIN: JTAG signal source selection.', category: ['gpio', 'adc', 'touch', 'strapping'], strapping: true, side: 'left' },
@@ -519,12 +519,12 @@ export const devBoardPinouts = {
     boardId: 'esp32-s3-devkitc-1',
     variant: 'esp32-s3',
     totalPins: 44,
-    leftPins: ['3V3', 'GPIO3', 'GPIO4', 'GPIO5', 'GPIO6', 'GPIO7', 'GPIO15', 'GPIO16', 'GPIO17', 'GPIO18', 'GPIO8', 'GPIO19', 'GPIO20', 'GPIO3', 'GPIO46', 'GPIO9', 'GPIO10', 'GPIO11', 'GPIO12', 'GPIO13', 'GPIO14', 'GND'],
-    rightPins: ['GND', 'GPIO43', 'GPIO44', 'GPIO1', 'GPIO2', 'GPIO42', 'GPIO41', 'GPIO40', 'GPIO39', 'GPIO38', 'GPIO37', 'GPIO36', 'GPIO35', 'GPIO0', 'GPIO45', 'GPIO48', 'GPIO47', 'GPIO21', 'GPIO20', 'GPIO19', '5V', 'GND'],
+    leftPins: ['3V3', '3V3', 'RST', 'GPIO4', 'GPIO5', 'GPIO6', 'GPIO7', 'GPIO15', 'GPIO16', 'GPIO17', 'GPIO18', 'GPIO8', 'GPIO3', 'GPIO46', 'GPIO9', 'GPIO10', 'GPIO11', 'GPIO12', 'GPIO13', 'GPIO14', '5V', 'GND'],
+    rightPins: ['GND', 'GPIO43', 'GPIO44', 'GPIO1', 'GPIO2', 'GPIO42', 'GPIO41', 'GPIO40', 'GPIO39', 'GPIO38', 'GPIO37', 'GPIO36', 'GPIO35', 'GPIO0', 'GPIO45', 'GPIO48', 'GPIO47', 'GPIO21', 'GPIO20', 'GPIO19', 'GND', 'GND'],
     specialPins: {
       rgbLed: 'GPIO48',
       boot: 'GPIO0',
-      reset: 'EN',
+      reset: 'RST',
       usbDp: 'GPIO20',
       usbDn: 'GPIO19',
     },
@@ -667,7 +667,7 @@ export const pinoutsByVariant = {
 export const safeGPIOsByVariant = {
   'esp32': [4, 13, 14, 16, 17, 18, 19, 21, 22, 23, 25, 26, 27, 32, 33],
   'esp32-s2': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44],
-  'esp32-s3': [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 38, 39, 40, 41, 42, 47, 48],
+  'esp32-s3': [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 38, 39, 40, 41, 42, 47, 48],
   'esp32-c3': [0, 1, 3, 4, 5, 6, 7, 10, 20, 21],
   'esp32-c5': [0, 1, 3, 4, 5, 6, 8, 9, 10, 11, 12, 15, 23, 24, 26],
   'esp32-c6': [0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 14, 18, 19, 20, 21, 22, 23],
