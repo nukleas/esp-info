@@ -305,7 +305,7 @@ export const variants = [
       i2s: 1,
       uart: 2,
       pwm: 6,
-      can: 0,
+      can: 1,
       usb: 'Serial/JTAG',
       ethernet: false,
       camera: false,

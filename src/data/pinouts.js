@@ -288,27 +288,35 @@ export const esp32c6Pins = [
   { pin: 7, name: 'GPIO4', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 4', alternateFunctions: ['ADC1_CH4', 'RTC_GPIO4', 'LP_GPIO4', 'MTMS'], notes: 'JTAG TMS. LP GPIO.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
   { pin: 8, name: 'GPIO5', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 5', alternateFunctions: ['ADC1_CH5', 'RTC_GPIO5', 'LP_GPIO5', 'MTDI'], notes: 'JTAG TDI. LP GPIO.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
   { pin: 9, name: 'GPIO6', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 6', alternateFunctions: ['ADC1_CH6', 'RTC_GPIO6', 'LP_GPIO6', 'MTCK'], notes: 'JTAG TCK. LP GPIO.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
+  { pin: 10, name: 'GPIO7', type: 'gpio', voltage: '3.3V', description: 'JTAG MTDO / SPI', alternateFunctions: ['LP_GPIO7', 'FSPID', 'MTDO'], notes: 'JTAG TDO. LP GPIO. Default SPI MOSI.', category: ['gpio', 'spi', 'jtag', 'pwm'], defaultFunction: 'MOSI', side: 'left' },
 
   // Strapping pins
-  { pin: 10, name: 'GPIO8', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: ['LP_GPIO8'], notes: 'STRAPPING PIN: Controls boot mode. Default I2C SDA.', category: ['gpio', 'i2c', 'strapping'], strapping: true, defaultFunction: 'SDA', side: 'left' },
-  { pin: 11, name: 'GPIO9', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: ['LP_GPIO9', 'FSPICS0'], notes: 'STRAPPING PIN: Boot source. Default I2C SCL.', category: ['gpio', 'i2c', 'strapping'], strapping: true, defaultFunction: 'SCL', side: 'right' },
-  { pin: 12, name: 'GPIO15', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: [], notes: 'STRAPPING PIN: Core voltage selection.', category: ['gpio', 'strapping'], strapping: true, side: 'right' },
+  { pin: 11, name: 'GPIO8', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: ['LP_GPIO8'], notes: 'STRAPPING PIN: Controls boot mode. Default I2C SDA.', category: ['gpio', 'i2c', 'strapping'], strapping: true, defaultFunction: 'SDA', side: 'left' },
+  { pin: 12, name: 'GPIO9', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: ['LP_GPIO9', 'FSPICS0'], notes: 'STRAPPING PIN: Boot source. Default I2C SCL.', category: ['gpio', 'i2c', 'strapping'], strapping: true, defaultFunction: 'SCL', side: 'right' },
+
+  // General GPIO (GPIO10-11, GPIO14)
+  { pin: 13, name: 'GPIO10', type: 'gpio', voltage: '3.3V', description: 'General purpose I/O', alternateFunctions: [], notes: 'Safe to use. May not be available on all modules.', category: ['gpio', 'pwm'], side: 'right' },
+  { pin: 14, name: 'GPIO11', type: 'gpio', voltage: '3.3V', description: 'General purpose I/O', alternateFunctions: [], notes: 'Safe to use. May not be available on all modules.', category: ['gpio', 'pwm'], side: 'right' },
 
   // USB (native)
-  { pin: 13, name: 'GPIO12', type: 'gpio', voltage: '3.3V', description: 'USB D-', alternateFunctions: ['USB_D-'], notes: 'Native USB D-.', category: ['gpio', 'usb'], side: 'right' },
-  { pin: 14, name: 'GPIO13', type: 'gpio', voltage: '3.3V', description: 'USB D+', alternateFunctions: ['USB_D+'], notes: 'Native USB D+.', category: ['gpio', 'usb'], side: 'right' },
+  { pin: 15, name: 'GPIO12', type: 'gpio', voltage: '3.3V', description: 'USB D-', alternateFunctions: ['USB_D-'], notes: 'Native USB D-.', category: ['gpio', 'usb'], side: 'right' },
+  { pin: 16, name: 'GPIO13', type: 'gpio', voltage: '3.3V', description: 'USB D+', alternateFunctions: ['USB_D+'], notes: 'Native USB D+.', category: ['gpio', 'usb'], side: 'right' },
+  { pin: 17, name: 'GPIO14', type: 'gpio', voltage: '3.3V', description: 'General purpose I/O', alternateFunctions: [], notes: 'Safe to use.', category: ['gpio', 'pwm'], side: 'right' },
+
+  // Strapping pin
+  { pin: 18, name: 'GPIO15', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: [], notes: 'STRAPPING PIN: Core voltage selection.', category: ['gpio', 'strapping'], strapping: true, side: 'right' },
 
   // UART
-  { pin: 15, name: 'GPIO16', type: 'gpio', voltage: '3.3V', description: 'UART TX', alternateFunctions: ['U0TXD'], notes: 'Default UART0 TX.', category: ['gpio', 'uart', 'pwm'], defaultFunction: 'TX', side: 'right' },
-  { pin: 16, name: 'GPIO17', type: 'gpio', voltage: '3.3V', description: 'UART RX', alternateFunctions: ['U0RXD'], notes: 'Default UART0 RX.', category: ['gpio', 'uart', 'pwm'], defaultFunction: 'RX', side: 'right' },
+  { pin: 19, name: 'GPIO16', type: 'gpio', voltage: '3.3V', description: 'UART TX', alternateFunctions: ['U0TXD'], notes: 'Default UART0 TX.', category: ['gpio', 'uart', 'pwm'], defaultFunction: 'TX', side: 'right' },
+  { pin: 20, name: 'GPIO17', type: 'gpio', voltage: '3.3V', description: 'UART RX', alternateFunctions: ['U0RXD'], notes: 'Default UART0 RX.', category: ['gpio', 'uart', 'pwm'], defaultFunction: 'RX', side: 'right' },
 
-  // SPI
-  { pin: 17, name: 'GPIO18', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI', alternateFunctions: ['SDIO_CLK', 'FSPICS0'], notes: 'SDIO CLK or SPI CS.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
-  { pin: 18, name: 'GPIO19', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI', alternateFunctions: ['SDIO_CMD', 'FSPICLK'], notes: 'SDIO CMD or SPI CLK.', category: ['gpio', 'spi', 'sdio', 'pwm'], defaultFunction: 'SCK', side: 'right' },
-  { pin: 19, name: 'GPIO20', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI', alternateFunctions: ['SDIO_D0', 'FSPID'], notes: 'SDIO D0 or SPI MOSI.', category: ['gpio', 'spi', 'sdio', 'pwm'], defaultFunction: 'MOSI', side: 'right' },
-  { pin: 20, name: 'GPIO21', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI', alternateFunctions: ['SDIO_D1', 'FSPIQ'], notes: 'SDIO D1 or SPI MISO.', category: ['gpio', 'spi', 'sdio', 'pwm'], defaultFunction: 'MISO', side: 'right' },
-  { pin: 21, name: 'GPIO22', type: 'gpio', voltage: '3.3V', description: 'SDIO D2', alternateFunctions: ['SDIO_D2', 'FSPIHD'], notes: 'SDIO D2 or SPI HD.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
-  { pin: 22, name: 'GPIO23', type: 'gpio', voltage: '3.3V', description: 'SDIO D3', alternateFunctions: ['SDIO_D3', 'FSPIWP'], notes: 'SDIO D3 or SPI WP.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
+  // SDIO / SPI
+  { pin: 21, name: 'GPIO18', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI CS', alternateFunctions: ['SDIO_CLK', 'FSPICS0'], notes: 'SDIO CLK or SPI CS.', category: ['gpio', 'spi', 'sdio', 'pwm'], defaultFunction: 'SS', side: 'right' },
+  { pin: 22, name: 'GPIO19', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI CLK', alternateFunctions: ['SDIO_CMD', 'FSPICLK'], notes: 'SDIO CMD or SPI CLK.', category: ['gpio', 'spi', 'sdio', 'pwm'], defaultFunction: 'SCK', side: 'right' },
+  { pin: 23, name: 'GPIO20', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI MOSI', alternateFunctions: ['SDIO_D0', 'FSPID'], notes: 'SDIO D0 or SPI MOSI.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
+  { pin: 24, name: 'GPIO21', type: 'gpio', voltage: '3.3V', description: 'SDIO / SPI MISO', alternateFunctions: ['SDIO_D1', 'FSPIQ'], notes: 'SDIO D1 or SPI MISO.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
+  { pin: 25, name: 'GPIO22', type: 'gpio', voltage: '3.3V', description: 'SDIO D2', alternateFunctions: ['SDIO_D2', 'FSPIHD'], notes: 'SDIO D2 or SPI HD.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
+  { pin: 26, name: 'GPIO23', type: 'gpio', voltage: '3.3V', description: 'SDIO D3', alternateFunctions: ['SDIO_D3', 'FSPIWP'], notes: 'SDIO D3 or SPI WP.', category: ['gpio', 'spi', 'sdio', 'pwm'], side: 'right' },
 ]
 
 // ============================================
