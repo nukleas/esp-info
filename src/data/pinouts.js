@@ -241,7 +241,7 @@ export const esp32c3Pins = [
   { pin: 5, name: 'GPIO2', type: 'gpio', voltage: '3.3V', description: 'Strapping - Boot mode', alternateFunctions: ['ADC1_CH2', 'RTC_GPIO2', 'FSPIQ'], notes: 'STRAPPING PIN: Selects boot mode. Avoid for general use.', category: ['gpio', 'adc', 'strapping'], strapping: true, side: 'left' },
   { pin: 6, name: 'GPIO3', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 3', alternateFunctions: ['ADC1_CH3', 'RTC_GPIO3'], notes: 'Safe to use.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
   { pin: 7, name: 'GPIO4', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 4', alternateFunctions: ['ADC1_CH4', 'RTC_GPIO4', 'FSPIHD', 'MTMS'], notes: 'Safe to use. JTAG TMS.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
-  { pin: 8, name: 'GPIO5', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 5', alternateFunctions: ['ADC1_CH5', 'RTC_GPIO5', 'FSPIWP', 'MTDI'], notes: 'Safe to use. JTAG TDI.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
+  { pin: 8, name: 'GPIO5', type: 'gpio', voltage: '3.3V', description: 'ADC2 Channel 0', alternateFunctions: ['ADC2_CH0', 'RTC_GPIO5', 'FSPIWP', 'MTDI'], notes: 'Safe to use. JTAG TDI. ADC2 not factory-calibrated.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
 
   // SPI pins
   { pin: 9, name: 'GPIO6', type: 'gpio', voltage: '3.3V', description: 'FSPI MISO', alternateFunctions: ['FSPICLK', 'MTCK'], notes: 'Default SPI CLK. JTAG TCK.', category: ['gpio', 'spi', 'pwm'], defaultFunction: 'SCK', side: 'left' },
