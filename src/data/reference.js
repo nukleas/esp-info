@@ -219,9 +219,10 @@ export const electricalSpecs = {
 // USEFUL FORMULAS
 // ============================================
 
-export const formulas = {
-  ledResistor: {
+export const formulas = [
+  {
     name: 'LED Current Limiting Resistor',
+    description: 'Calculate the resistor value needed to limit current through an LED',
     formula: 'R = (Vsource - Vf) / If',
     variables: {
       R: 'Resistor value (Ω)',
@@ -229,23 +230,11 @@ export const formulas = {
       Vf: 'LED forward voltage (varies by color)',
       If: 'Desired LED current (typically 5-20mA)',
     },
-    typicalVf: {
-      red: 2.0,
-      orange: 2.1,
-      yellow: 2.1,
-      green: 2.2,
-      blue: 3.0,
-      white: 3.2,
-      unit: 'V',
-    },
-    example: {
-      description: 'Red LED at 10mA from 3.3V',
-      calculation: '(3.3 - 2.0) / 0.010 = 130Ω',
-      recommendation: 'Use 150Ω (next standard value up)',
-    },
+    example: 'Red LED at 10mA from 3.3V: (3.3 - 2.0) / 0.010 = 130Ω. Use 150Ω (next standard value up). Typical Vf: Red=2.0V, Green=2.2V, Blue=3.0V, White=3.2V',
   },
-  voltageDivider: {
+  {
     name: 'Voltage Divider',
+    description: 'Calculate output voltage from a voltage divider circuit',
     formula: 'Vout = Vin × (R2 / (R1 + R2))',
     variables: {
       Vout: 'Output voltage (must be ≤3.3V for ESP32)',
@@ -253,70 +242,53 @@ export const formulas = {
       R1: 'Top resistor (connected to Vin)',
       R2: 'Bottom resistor (connected to GND)',
     },
-    inverseFormula: 'R1 = R2 × ((Vin / Vout) - 1)',
-    examples: [
-      { Vin: 5, Vout: 3.3, R1: '5.1kΩ', R2: '10kΩ' },
-      { Vin: 12, Vout: 3.3, R1: '27kΩ', R2: '10kΩ' },
-      { Vin: 24, Vout: 3.3, R1: '62kΩ', R2: '10kΩ' },
-    ],
+    example: '5V to 3.3V: Use R1=5.1kΩ, R2=10kΩ. 12V to 3.3V: Use R1=27kΩ, R2=10kΩ',
   },
-  i2cPullup: {
+  {
     name: 'I2C Pull-up Resistor',
+    description: 'Calculate I2C bus pull-up resistor value',
     formula: 'Rp = tr / (0.8473 × Cb)',
     variables: {
       Rp: 'Pull-up resistor value (Ω)',
       tr: 'Rise time (ns) - 1000ns for standard, 300ns for fast mode',
       Cb: 'Bus capacitance (pF) - typically 50-400pF',
     },
-    guidelines: {
-      '100kHz (Standard)': '4.7kΩ - 10kΩ',
-      '400kHz (Fast)': '2.2kΩ - 4.7kΩ',
-      'shortWires': '10kΩ works fine',
-      'longWires': 'Use 2.2kΩ',
-    },
-    note: 'Many I2C modules include pull-ups - avoid doubling up',
+    example: 'Standard 100kHz: Use 4.7kΩ - 10kΩ. Fast 400kHz: Use 2.2kΩ - 4.7kΩ. Many I2C modules include pull-ups - avoid doubling up',
   },
-  rcTimeConstant: {
+  {
     name: 'RC Time Constant (Debounce/Filter)',
+    description: 'Calculate RC circuit time constant for debouncing or filtering',
     formula: 'τ = R × C',
     variables: {
       τ: 'Time constant (seconds)',
       R: 'Resistance (Ω)',
       C: 'Capacitance (F)',
     },
-    settlingTime: '~5τ to fully charge/discharge',
-    examples: [
-      { R: '10kΩ', C: '100nF', τ: '1ms', use: 'Button debounce' },
-      { R: '10kΩ', C: '1µF', τ: '10ms', use: 'Longer debounce' },
-      { R: '1kΩ', C: '100nF', τ: '0.1ms', use: 'Fast filter' },
-    ],
+    example: '10kΩ + 100nF = 1ms (button debounce). 10kΩ + 1µF = 10ms (longer debounce). Settling time: ~5τ to fully charge/discharge',
   },
-  pwmFrequency: {
+  {
     name: 'PWM Frequency',
+    description: 'Calculate PWM frequency for ESP32',
     formula: 'fPWM = fAPB / (prescaler × period)',
-    esp32Specific: {
-      maxChannels: 16,
-      timerResolution: '1-16 bits',
-      maxFrequency: '40MHz (with 1-bit resolution)',
-      typicalUse: {
-        led: '5kHz (8-bit)',
-        motor: '25kHz (8-bit) - inaudible',
-        servo: '50Hz (16-bit)',
-      },
+    variables: {
+      fPWM: 'PWM frequency (Hz)',
+      fAPB: 'APB clock frequency (typically 80MHz)',
+      prescaler: 'Prescaler value',
+      period: 'Period value',
     },
+    example: 'ESP32: Max 16 channels, 1-16 bit resolution, max 40MHz (1-bit). Typical: LED=5kHz (8-bit), Motor=25kHz (8-bit), Servo=50Hz (16-bit)',
   },
-  batteryCapacity: {
+  {
     name: 'Battery Runtime',
+    description: 'Estimate battery runtime based on capacity and current draw',
     formula: 'Runtime (hours) = Capacity (mAh) / Average Current (mA)',
-    derating: '80% of theoretical (account for inefficiency)',
-    example: {
-      battery: '1000mAh LiPo',
-      current: '80mA average',
-      theoretical: '12.5 hours',
-      realistic: '~10 hours',
+    variables: {
+      Capacity: 'Battery capacity in mAh',
+      'Average Current': 'Average current draw in mA',
     },
+    example: '1000mAh LiPo at 80mA average = 12.5 hours theoretical, ~10 hours realistic (80% derating for inefficiency)',
   },
-}
+]
 
 // ============================================
 // COMMON PART NUMBERS
@@ -362,19 +334,36 @@ export const commonParts = {
 // ============================================
 
 export const wifiReference = {
-  channels: {
-    '2.4GHz': {
-      count: 14,
-      bandwidth: '20MHz or 40MHz',
-      nonOverlapping: [1, 6, 11],
-      note: 'Use channels 1, 6, or 11 for best performance',
+  modes: [
+    {
+      name: 'Station (STA)',
+      description: 'Connect to existing WiFi network as a client',
     },
-    '5GHz': {
-      bands: ['UNII-1', 'UNII-2', 'UNII-3'],
-      bandwidth: '20/40/80MHz',
-      supported: 'ESP32-C5 only (as of 2025)',
+    {
+      name: 'Access Point (AP)',
+      description: 'Create a WiFi network that other devices can connect to',
     },
-  },
+    {
+      name: 'Station + AP',
+      description: 'Both connect to a network and host a network simultaneously',
+    },
+  ],
+  channels: [
+    { channel: '1', frequency: '2.412 GHz', note: 'Non-overlapping with 6, 11' },
+    { channel: '2', frequency: '2.417 GHz', note: '' },
+    { channel: '3', frequency: '2.422 GHz', note: '' },
+    { channel: '4', frequency: '2.427 GHz', note: '' },
+    { channel: '5', frequency: '2.432 GHz', note: '' },
+    { channel: '6', frequency: '2.437 GHz', note: 'Non-overlapping with 1, 11' },
+    { channel: '7', frequency: '2.442 GHz', note: '' },
+    { channel: '8', frequency: '2.447 GHz', note: '' },
+    { channel: '9', frequency: '2.452 GHz', note: '' },
+    { channel: '10', frequency: '2.457 GHz', note: '' },
+    { channel: '11', frequency: '2.462 GHz', note: 'Non-overlapping with 1, 6' },
+    { channel: '12', frequency: '2.467 GHz', note: 'Not available in all regions' },
+    { channel: '13', frequency: '2.472 GHz', note: 'Not available in all regions' },
+    { channel: '14', frequency: '2.484 GHz', note: 'Japan only' },
+  ],
   antennaGuidelines: {
     keepout: '15mm around PCB antenna',
     groundPlane: 'Required under module, not under antenna',
@@ -424,24 +413,43 @@ export const memoryReference = {
     flash: 'Internal 4MB (embedded)',
     psram: 'Not supported',
   },
-  partitionSchemes: {
-    default: {
+  flashSizes: [
+    { size: '4 MB', bytes: '4,194,304 bytes' },
+    { size: '8 MB', bytes: '8,388,608 bytes' },
+    { size: '16 MB', bytes: '16,777,216 bytes' },
+    { size: '32 MB', bytes: '33,554,432 bytes' },
+  ],
+  psramOptions: [
+    { size: '2 MB', note: 'SPI PSRAM' },
+    { size: '4 MB', note: 'SPI PSRAM' },
+    { size: '8 MB', note: 'SPI or Octal PSRAM (S3)' },
+  ],
+  partitionSchemes: [
+    {
       name: 'Default 4MB with SPIFFS',
-      app0: '1.2MB',
-      app1: '1.2MB (OTA)',
-      spiffs: '1.5MB',
+      description: 'Standard partition with OTA support and SPIFFS filesystem',
+      sizes: {
+        app0: '1.2MB',
+        app1: '1.2MB (OTA)',
+        spiffs: '1.5MB',
+      },
     },
-    minimal: {
+    {
       name: 'Minimal (no OTA)',
-      app0: '3MB',
-      spiffs: '1MB',
+      description: 'Single app partition with SPIFFS, no OTA capability',
+      sizes: {
+        app0: '3MB',
+        spiffs: '1MB',
+      },
     },
-    huge: {
+    {
       name: 'Huge APP',
-      app0: '3MB',
-      note: 'No OTA, minimal filesystem',
+      description: 'Maximum app space, no OTA, minimal filesystem',
+      sizes: {
+        app0: '3MB',
+      },
     },
-  },
+  ],
 }
 
 // ============================================
@@ -466,3 +474,117 @@ export const programmingReference = {
     write: 'esptool.py --port COM3 write_flash 0x8000 custom-partition.bin',
   },
 }
+
+// Programming commands formatted for UI display
+export const programmingCommands = [
+  {
+    category: 'esptool.py - Basic Commands',
+    commands: [
+      {
+        name: 'Erase Flash',
+        description: 'Completely erase the flash memory',
+        command: 'esptool.py --port COM3 erase_flash',
+      },
+      {
+        name: 'Write Firmware',
+        description: 'Write firmware binary to flash starting at address 0x0',
+        command: 'esptool.py --port COM3 write_flash 0x0 firmware.bin',
+      },
+      {
+        name: 'Read MAC Address',
+        description: 'Read the chip MAC address',
+        command: 'esptool.py --port COM3 read_mac',
+      },
+      {
+        name: 'Chip Information',
+        description: 'Get detailed chip information',
+        command: 'esptool.py --port COM3 chip_id',
+      },
+      {
+        name: 'Flash ID',
+        description: 'Read flash memory chip ID',
+        command: 'esptool.py --port COM3 flash_id',
+      },
+    ],
+  },
+  {
+    category: 'esptool.py - Partition Operations',
+    commands: [
+      {
+        name: 'Read Partition Table',
+        description: 'Read partition table from flash (backup)',
+        command: 'esptool.py --port COM3 read_flash 0x8000 0x1000 partition-backup.bin',
+      },
+      {
+        name: 'Write Partition Table',
+        description: 'Write custom partition table to flash',
+        command: 'esptool.py --port COM3 write_flash 0x8000 custom-partition.bin',
+      },
+      {
+        name: 'Read Full Flash',
+        description: 'Read entire flash memory to file',
+        command: 'esptool.py --port COM3 read_flash 0x0 0x400000 flash-backup.bin',
+      },
+    ],
+  },
+  {
+    category: 'esptool.py - Advanced',
+    commands: [
+      {
+        name: 'Flash with Options',
+        description: 'Flash with custom baud rate and flash mode',
+        command: 'esptool.py --port COM3 --baud 921600 write_flash --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0 firmware.bin',
+      },
+      {
+        name: 'Verify Flash',
+        description: 'Verify flash contents after writing',
+        command: 'esptool.py --port COM3 verify_flash 0x0 firmware.bin',
+      },
+      {
+        name: 'Read eFuses',
+        description: 'Read eFuse values (read-only chip configuration)',
+        command: 'esptool.py --port COM3 summary',
+      },
+    ],
+  },
+  {
+    category: 'PlatformIO',
+    commands: [
+      {
+        name: 'Upload',
+        description: 'Build and upload firmware via PlatformIO',
+        command: 'pio run --target upload',
+      },
+      {
+        name: 'Monitor Serial',
+        description: 'Open serial monitor',
+        command: 'pio device monitor',
+      },
+      {
+        name: 'Clean Build',
+        description: 'Clean build files and rebuild',
+        command: 'pio run --target clean',
+      },
+    ],
+  },
+  {
+    category: 'Arduino IDE',
+    commands: [
+      {
+        name: 'Select Board',
+        description: 'Tools → Board → ESP32 Arduino → Select your board variant',
+        command: 'N/A (GUI only)',
+      },
+      {
+        name: 'Select Port',
+        description: 'Tools → Port → Select COM port (Windows) or /dev/ttyUSB* (Linux/Mac)',
+        command: 'N/A (GUI only)',
+      },
+      {
+        name: 'Upload Speed',
+        description: 'Tools → Upload Speed → 921600 (recommended) or 115200 (safe)',
+        command: 'N/A (GUI only)',
+      },
+    ],
+  },
+]

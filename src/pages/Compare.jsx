@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 import { variants } from '../data/variants'
 
 const specCategories = [
@@ -116,8 +116,8 @@ export default function Compare() {
           </thead>
           <tbody>
             {specCategories.map((category, catIdx) => (
-              <>
-                <tr key={`cat-${catIdx}`}>
+              <Fragment key={`cat-${catIdx}`}>
+                <tr>
                   <td
                     colSpan={selectedVariants.length + 1}
                     className="p-3 bg-bg-tertiary text-accent-cyan font-semibold text-sm border-t border-white/10"
@@ -146,7 +146,7 @@ export default function Compare() {
                     })}
                   </tr>
                 ))}
-              </>
+              </Fragment>
             ))}
           </tbody>
         </table>
