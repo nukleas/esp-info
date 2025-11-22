@@ -90,6 +90,225 @@ export const circuitSchematics = {
     ),
   },
 
+  'power-3v3-mcp1700': {
+    width: 400,
+    height: 220,
+    render: ({ animated }) => (
+      <g>
+        <Label x={200} y={20} text="MCP1700 Ultra Low-Power LDO" size={12} />
+
+        {/* Battery Input */}
+        <Label x={35} y={55} text="3.7V" size={10} color={colors.power} />
+        <Label x={35} y={68} text="LiPo" size={7} color={colors.muted} />
+        <Wire points={[{ x: 55, y: 55 }, { x: 70, y: 55 }]} color={colors.power} />
+
+        {/* Input capacitor C1 - ceramic */}
+        <Junction x={70} y={55} color={colors.power} />
+        <Components.Capacitor x={40} y={55} value="1uF" label="C1" />
+        <Wire points={[{ x: 70, y: 85 }, { x: 70, y: 130 }]} />
+
+        {/* Wire to regulator */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 70, y: 55 }, { x: 140, y: 55 }]} color={colors.power} speed={2} />
+        ) : (
+          <Wire points={[{ x: 70, y: 55 }, { x: 140, y: 55 }]} color={colors.power} />
+        )}
+
+        {/* MCP1700 Regulator - TO-92 style */}
+        <g style={{ filter: 'drop-shadow(0 0 6px rgba(0, 255, 170, 0.4))' }}>
+          {/* TO-92 package body */}
+          <path d="M 140,40 L 140,80 Q 175,90 210,80 L 210,40 Q 175,35 140,40" fill="#1a2332" stroke="#00ffaa" strokeWidth={2} />
+          <text x={175} y={55} fontSize={8} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">MCP1700</text>
+          <text x={175} y={68} fontSize={7} fontFamily="JetBrains Mono" fill={colors.muted} textAnchor="middle">3.3V</text>
+          {/* Pin labels inside */}
+          <text x={150} y={82} fontSize={5} fill={colors.muted}>VIN</text>
+          <text x={175} y={88} fontSize={5} fill={colors.muted} textAnchor="middle">GND</text>
+          <text x={200} y={82} fontSize={5} fill={colors.muted} textAnchor="end">VOUT</text>
+        </g>
+
+        {/* Output wire */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 210, y: 55 }, { x: 280, y: 55 }]} color="#00ffaa" speed={2} delay={0.5} />
+        ) : (
+          <Wire points={[{ x: 210, y: 55 }, { x: 280, y: 55 }]} color="#00ffaa" />
+        )}
+
+        {/* Output capacitor C2 - ceramic */}
+        <Junction x={280} y={55} color="#00ffaa" />
+        <Components.Capacitor x={250} y={55} value="1uF" label="C2" />
+        <Wire points={[{ x: 280, y: 85 }, { x: 280, y: 130 }]} />
+
+        {/* Bulk capacitor for WiFi - shown as optional */}
+        <Junction x={330} y={55} color="#00ffaa" />
+        <Wire points={[{ x: 280, y: 55 }, { x: 330, y: 55 }]} color="#00ffaa" />
+        <Components.Capacitor x={300} y={55} value="100uF" label="C3" polarized />
+        <Wire points={[{ x: 330, y: 85 }, { x: 330, y: 130 }]} />
+        <text x={330} y={100} fontSize={5} fill={colors.muted} textAnchor="middle">(WiFi</text>
+        <text x={330} y={108} fontSize={5} fill={colors.muted} textAnchor="middle">bursts)</text>
+
+        {/* 3.3V Output label */}
+        <Wire points={[{ x: 330, y: 55 }, { x: 365, y: 55 }]} color="#00ffaa" />
+        <Label x={370} y={60} text="3.3V" size={10} color="#00ffaa" anchor="start" />
+
+        {/* Ground connections */}
+        <Wire points={[{ x: 70, y: 130 }, { x: 175, y: 130 }]} color={colors.ground} />
+        <Wire points={[{ x: 175, y: 90 }, { x: 175, y: 130 }]} color={colors.ground} />
+        <Wire points={[{ x: 175, y: 130 }, { x: 330, y: 130 }]} color={colors.ground} />
+        <Junction x={175} y={130} color={colors.ground} />
+        <Junction x={280} y={130} color={colors.ground} />
+        <Junction x={330} y={130} color={colors.ground} />
+        <Components.Ground x={200} y={145} />
+
+        {/* Low power indicator */}
+        <rect x={60} y={160} width={120} height={40} rx={4} fill="rgba(0, 255, 170, 0.05)" stroke="rgba(0, 255, 170, 0.2)" strokeWidth={1} />
+        <text x={120} y={177} fontSize={7} fill="#00ffaa" textAnchor="middle">Ultra-Low Iq: 1.6uA</text>
+        <text x={120} y={190} fontSize={6} fill={colors.muted} textAnchor="middle">Ideal for deep sleep</text>
+
+        {/* Specs */}
+        <text x={220} y={175} fontSize={7} fill={colors.muted}>Input: 2.3-6V (LiPo safe)</text>
+        <text x={220} y={188} fontSize={7} fill={colors.muted}>Output: 3.3V @ 250mA</text>
+        <text x={220} y={201} fontSize={7} fill={colors.muted}>Dropout: 178mV @ 250mA</text>
+      </g>
+    ),
+  },
+
+  'power-lipo-charging': {
+    width: 480,
+    height: 260,
+    render: ({ animated }) => (
+      <g>
+        <Label x={240} y={20} text="LiPo Battery Charging System (TP4056)" size={12} />
+
+        {/* USB Input */}
+        <g>
+          <rect x={20} y={60} width={50} height={35} rx={3} fill="#1a2332" stroke={colors.power} strokeWidth={2} />
+          <text x={45} y={75} fontSize={7} fontFamily="JetBrains Mono" fill={colors.power} textAnchor="middle">USB</text>
+          <text x={45} y={87} fontSize={6} fill={colors.muted} textAnchor="middle">5V</text>
+        </g>
+
+        {/* Wire from USB to TP4056 */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 70, y: 77 }, { x: 100, y: 77 }]} color={colors.power} speed={2} />
+        ) : (
+          <Wire points={[{ x: 70, y: 77 }, { x: 100, y: 77 }]} color={colors.power} />
+        )}
+
+        {/* TP4056 Module */}
+        <g style={{ filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.4))' }}>
+          <rect x={100} y={50} width={90} height={70} rx={4} fill="#1a2332" stroke="#ef4444" strokeWidth={2} />
+          <text x={145} y={70} fontSize={9} fontFamily="JetBrains Mono" fill="#ef4444" textAnchor="middle">TP4056</text>
+          <text x={145} y={83} fontSize={6} fill={colors.muted} textAnchor="middle">Charger Module</text>
+
+          {/* Charging LEDs */}
+          <circle cx={120} cy={100} r={4} fill="#ef4444" fillOpacity={0.7} stroke="#ef4444" strokeWidth={1}>
+            {animated && <animate attributeName="fill-opacity" values="0.7;0.3;0.7" dur="1.5s" repeatCount="indefinite" />}
+          </circle>
+          <text x={120} y={113} fontSize={5} fill={colors.muted} textAnchor="middle">CHG</text>
+
+          <circle cx={170} cy={100} r={4} fill="#22c55e" fillOpacity={0.4} stroke="#22c55e" strokeWidth={1} />
+          <text x={170} y={113} fontSize={5} fill={colors.muted} textAnchor="middle">FULL</text>
+
+          {/* Pin labels */}
+          <text x={105} y={65} fontSize={5} fill={colors.muted}>IN+</text>
+          <text x={185} y={65} fontSize={5} fill={colors.muted} textAnchor="end">B+</text>
+          <text x={185} y={118} fontSize={5} fill={colors.muted} textAnchor="end">OUT+</text>
+        </g>
+
+        {/* LiPo Battery */}
+        <g style={{ filter: 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.5))' }}>
+          <rect x={220} y={40} width={70} height={45} rx={4} fill="#1a2332" stroke="#fbbf24" strokeWidth={2} />
+          <rect x={290} y={52} width={6} height={20} rx={2} fill="#fbbf24" fillOpacity={0.5} />
+          <text x={255} y={58} fontSize={8} fontFamily="JetBrains Mono" fill="#fbbf24" textAnchor="middle">LiPo</text>
+          <text x={255} y={72} fontSize={6} fill={colors.muted} textAnchor="middle">3.7V 1000mAh</text>
+          <text x={225} y={82} fontSize={5} fill={colors.muted}>B+</text>
+          <text x={285} y={82} fontSize={5} fill={colors.muted} textAnchor="end">B-</text>
+        </g>
+
+        {/* Wire from TP4056 to Battery */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 190, y: 62 }, { x: 220, y: 62 }]} color="#fbbf24" speed={1.5} delay={0.3} />
+        ) : (
+          <Wire points={[{ x: 190, y: 62 }, { x: 220, y: 62 }]} color="#fbbf24" />
+        )}
+
+        {/* Junction from TP4056 OUT to LDO */}
+        <Wire points={[{ x: 190, y: 105 }, { x: 210, y: 105 }]} color="#fbbf24" />
+        <Junction x={210} y={105} color="#fbbf24" />
+        <Wire points={[{ x: 210, y: 105 }, { x: 210, y: 62 }, { x: 220, y: 62 }]} color="#fbbf24" />
+
+        {/* Wire to LDO */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 210, y: 105 }, { x: 280, y: 105 }]} color="#fbbf24" speed={2} delay={0.6} />
+        ) : (
+          <Wire points={[{ x: 210, y: 105 }, { x: 280, y: 105 }]} color="#fbbf24" />
+        )}
+
+        {/* AMS1117 LDO */}
+        <g style={{ filter: 'drop-shadow(0 0 6px rgba(0, 255, 170, 0.5))' }}>
+          <rect x={280} y={85} width={70} height={45} rx={4} fill="#1a2332" stroke="#00ffaa" strokeWidth={2} />
+          <text x={315} y={105} fontSize={8} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">AMS1117</text>
+          <text x={315} y={118} fontSize={6} fill={colors.muted} textAnchor="middle">3.3V LDO</text>
+          <text x={285} y={98} fontSize={5} fill={colors.muted}>VIN</text>
+          <text x={345} y={98} fontSize={5} fill={colors.muted} textAnchor="end">VOUT</text>
+        </g>
+
+        {/* Output capacitor */}
+        <Wire points={[{ x: 350, y: 105 }, { x: 380, y: 105 }]} color="#00ffaa" />
+        <Junction x={380} y={105} color="#00ffaa" />
+        <Components.Capacitor x={350} y={105} value="100uF" label="C1" polarized />
+        <Wire points={[{ x: 380, y: 135 }, { x: 380, y: 180 }]} />
+
+        {/* ESP32 Output */}
+        {animated ? (
+          <AnimatedWire points={[{ x: 380, y: 105 }, { x: 420, y: 105 }]} color="#00ffaa" speed={2} delay={0.9} />
+        ) : (
+          <Wire points={[{ x: 380, y: 105 }, { x: 420, y: 105 }]} color="#00ffaa" />
+        )}
+
+        <g>
+          <rect x={420} y={85} width={50} height={45} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
+          <text x={445} y={105} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
+          <text x={445} y={118} fontSize={6} fill={colors.muted} textAnchor="middle">3V3</text>
+        </g>
+
+        {/* Battery voltage monitoring (optional) */}
+        <Wire points={[{ x: 255, y: 85 }, { x: 255, y: 150 }]} color="#fbbf24" strokeDasharray="4,2" />
+        <rect x={220} y={150} width={70} height={30} rx={3} fill="rgba(251, 191, 36, 0.05)" stroke="rgba(251, 191, 36, 0.3)" strokeWidth={1} strokeDasharray="4,2" />
+        <text x={255} y={165} fontSize={6} fill="#fbbf24" textAnchor="middle">ADC (GPIO34)</text>
+        <text x={255} y={175} fontSize={5} fill={colors.muted} textAnchor="middle">Via voltage divider</text>
+
+        {/* Ground connections */}
+        <Wire points={[{ x: 45, y: 95 }, { x: 45, y: 180 }]} color={colors.ground} />
+        <Wire points={[{ x: 45, y: 180 }, { x: 445, y: 180 }]} color={colors.ground} />
+        <Wire points={[{ x: 145, y: 120 }, { x: 145, y: 180 }]} color={colors.ground} />
+        <Wire points={[{ x: 275, y: 85 }, { x: 275, y: 180 }]} color={colors.ground} />
+        <Wire points={[{ x: 315, y: 130 }, { x: 315, y: 180 }]} color={colors.ground} />
+        <Wire points={[{ x: 445, y: 130 }, { x: 445, y: 180 }]} color={colors.ground} />
+        <Junction x={145} y={180} color={colors.ground} />
+        <Junction x={275} y={180} color={colors.ground} />
+        <Junction x={315} y={180} color={colors.ground} />
+        <Junction x={380} y={180} color={colors.ground} />
+        <Junction x={445} y={180} color={colors.ground} />
+        <Components.Ground x={240} y={195} />
+
+        {/* Voltage labels */}
+        <text x={30} y={215} fontSize={7} fill={colors.muted}>USB 5V</text>
+        <text x={120} y={215} fontSize={7} fill={colors.muted}>Charge 1A</text>
+        <text x={230} y={215} fontSize={7} fill={colors.muted}>3.0-4.2V</text>
+        <text x={330} y={215} fontSize={7} fill={colors.muted}>3.3V regulated</text>
+
+        {/* Charging flow indicator */}
+        {animated && (
+          <g>
+            <circle r={3} fill="#ef4444" style={{ filter: 'drop-shadow(0 0 4px #ef4444)' }}>
+              <animateMotion dur="3s" repeatCount="indefinite" path="M 70 77 L 190 77 L 190 62 L 220 62" />
+            </circle>
+          </g>
+        )}
+      </g>
+    ),
+  },
+
   'power-decoupling': {
     width: 400,
     height: 220,
