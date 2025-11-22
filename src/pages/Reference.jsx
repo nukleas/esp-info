@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { bootModes, electricalSpecs, formulas, commonParts, wifiReference, memoryReference, programmingCommands } from '../data/reference'
+import { bootModes, electricalSpecs, formulas, commonParts, wifiReference, memoryReference, programmingReference } from '../data/reference'
 
 const tabs = [
   { id: 'boot', label: 'Boot Modes', icon: '⚡' },
@@ -359,26 +359,62 @@ export default function Reference() {
 
   const renderCommands = () => (
     <div className="space-y-6">
-      {programmingCommands && programmingCommands.map((group, i) => (
-        <div key={i} className="card">
-          <h3 className="text-lg font-semibold text-accent-cyan mb-4">{group.category}</h3>
-          <div className="space-y-3">
-            {group.commands.map((cmd, j) => (
-              <div key={j} className="bg-bg-secondary rounded-lg p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-text-primary">{cmd.name}</div>
-                    <div className="text-text-muted text-sm mt-1">{cmd.description}</div>
-                  </div>
-                </div>
-                <pre className="mt-3 bg-bg-primary p-3 rounded-lg overflow-x-auto text-sm font-mono text-accent-cyan">
-                  {cmd.command}
-                </pre>
-              </div>
-            ))}
-          </div>
+      {/* Esptool Commands */}
+      <div className="card">
+        <h3 className="text-lg font-semibold text-accent-cyan mb-4">Esptool Commands</h3>
+        <div className="space-y-3">
+          {Object.entries(programmingReference.esptool).map(([name, command]) => (
+            <div key={name} className="bg-bg-secondary rounded-lg p-4">
+              <div className="font-semibold text-text-primary capitalize">{name.replace(/([A-Z])/g, ' $1').trim()}</div>
+              <pre className="mt-2 bg-bg-primary p-3 rounded-lg overflow-x-auto text-sm font-mono text-accent-cyan">
+                {command}
+              </pre>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
+
+      {/* Baud Rates */}
+      <div className="card">
+        <h3 className="text-lg font-semibold text-accent-cyan mb-4">Baud Rates</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {programmingReference.baudRates.programming.map((rate) => (
+            <div
+              key={rate}
+              className={`bg-bg-secondary rounded-lg p-3 text-center font-mono ${
+                rate === programmingReference.baudRates.recommended
+                  ? 'border border-accent-cyan text-accent-cyan'
+                  : rate === programmingReference.baudRates.safe
+                  ? 'border border-green-400/50 text-green-400'
+                  : 'text-text-secondary'
+              }`}
+            >
+              {rate.toLocaleString()}
+              {rate === programmingReference.baudRates.recommended && (
+                <span className="block text-xs mt-1">Recommended</span>
+              )}
+              {rate === programmingReference.baudRates.safe && (
+                <span className="block text-xs mt-1">Safe</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Partition Tool */}
+      <div className="card">
+        <h3 className="text-lg font-semibold text-accent-cyan mb-4">Partition Table Commands</h3>
+        <div className="space-y-3">
+          {Object.entries(programmingReference.partitionTool).map(([name, command]) => (
+            <div key={name} className="bg-bg-secondary rounded-lg p-4">
+              <div className="font-semibold text-text-primary capitalize">{name} Partition</div>
+              <pre className="mt-2 bg-bg-primary p-3 rounded-lg overflow-x-auto text-sm font-mono text-accent-cyan">
+                {command}
+              </pre>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 
