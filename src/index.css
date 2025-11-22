@@ -80,6 +80,12 @@ code, pre, .font-mono {
     @apply border-accent-blue/40 shadow-glow-blue;
   }
 
+  .card-glow {
+    @apply bg-bg-tertiary border border-accent-cyan/30 rounded-lg p-6;
+    @apply transition-all duration-200 ease-in-out;
+    box-shadow: 0 0 30px rgba(0, 255, 170, 0.1), inset 0 0 60px rgba(0, 0, 0, 0.3);
+  }
+
   .btn-primary {
     @apply bg-accent-blue text-bg-primary px-4 py-2 rounded-md font-medium;
     @apply transition-all duration-200 ease-in-out;
