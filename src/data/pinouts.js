@@ -288,7 +288,7 @@ export const esp32c6Pins = [
   { pin: 7, name: 'GPIO4', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 4', alternateFunctions: ['ADC1_CH4', 'RTC_GPIO4', 'LP_GPIO4', 'MTMS'], notes: 'JTAG TMS. LP GPIO.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
   { pin: 8, name: 'GPIO5', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 5', alternateFunctions: ['ADC1_CH5', 'RTC_GPIO5', 'LP_GPIO5', 'MTDI'], notes: 'JTAG TDI. LP GPIO.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
   { pin: 9, name: 'GPIO6', type: 'gpio', voltage: '3.3V', description: 'ADC1 Channel 6', alternateFunctions: ['ADC1_CH6', 'RTC_GPIO6', 'LP_GPIO6', 'MTCK'], notes: 'JTAG TCK. LP GPIO.', category: ['gpio', 'adc', 'pwm'], side: 'left' },
-  { pin: 10, name: 'GPIO7', type: 'gpio', voltage: '3.3V', description: 'JTAG MTDO / SPI', alternateFunctions: ['LP_GPIO7', 'FSPID', 'MTDO'], notes: 'JTAG TDO. LP GPIO. Default SPI MOSI.', category: ['gpio', 'spi', 'jtag', 'pwm'], defaultFunction: 'MOSI', side: 'left' },
+  { pin: 10, name: 'GPIO7', type: 'gpio', voltage: '3.3V', description: 'JTAG MTDO / SPI', alternateFunctions: ['LP_GPIO7', 'FSPID', 'MTDO'], notes: 'JTAG TDO. LP GPIO. Alternate SPI MOSI.', category: ['gpio', 'spi', 'jtag', 'pwm'], side: 'left' },
 
   // Strapping pins
   { pin: 11, name: 'GPIO8', type: 'gpio', voltage: '3.3V', description: 'Strapping pin', alternateFunctions: ['LP_GPIO8'], notes: 'STRAPPING PIN: Controls boot mode. Default I2C SDA.', category: ['gpio', 'i2c', 'strapping'], strapping: true, defaultFunction: 'SDA', side: 'left' },
