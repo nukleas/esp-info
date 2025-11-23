@@ -159,7 +159,7 @@ export const boardPinouts = {
     ],
     safeGPIOs: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 35, 36, 37, 38, 39, 40, 41, 42, 47, 48],
     defaults: {
-      i2c: { sda: 21, scl: 22 },
+      i2c: { sda: 8, scl: 9 },
       spi: { mosi: 11, miso: 13, sck: 12, cs: 10 },
       uart: { tx: 43, rx: 44 },
     },
