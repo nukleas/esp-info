@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { boards, getBoardsByVariant, getBoardsWithCamera } from '../data/boards'
 import { variants } from '../data/variants'
+import { hasBoardPinout } from '../data/boardPinouts'
 
 // Get unique manufacturers and variants
 const manufacturers = ['All', ...new Set(boards.map(b => b.manufacturer))].sort()
@@ -206,12 +207,28 @@ export default function Boards() {
                 )}
               </div>
 
-              {/* Price */}
-              {board.price && (
-                <div className="mt-3 text-sm text-text-muted">
-                  ~{board.price}
-                </div>
-              )}
+              {/* Price and Pinout indicator */}
+              <div className="mt-3 flex items-center justify-between">
+                {board.price && (
+                  <span className="text-sm text-text-muted">
+                    ~{board.price}
+                  </span>
+                )}
+                {hasBoardPinout(board.id) && (
+                  <Link
+                    to={`/boards/${board.id}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="text-xs px-2 py-1 bg-accent-blue/20 text-accent-blue rounded hover:bg-accent-blue/30 transition-colors flex items-center gap-1"
+                  >
+                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <rect x="4" y="4" width="16" height="16" rx="2" strokeWidth="2" />
+                      <line x1="4" y1="9" x2="2" y2="9" strokeWidth="2" />
+                      <line x1="20" y1="9" x2="22" y2="9" strokeWidth="2" />
+                    </svg>
+                    Pinout
+                  </Link>
+                )}
+              </div>
             </div>
           )
         })}
@@ -377,29 +394,42 @@ export default function Boards() {
                         </div>
                       )}
                     </div>
-                    {selectedBoard.pinoutUrl ? (
-                      <a
-                        href={selectedBoard.pinoutUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-flex items-center gap-1 text-sm text-accent-blue hover:underline"
-                      >
-                        View board pinout
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      </a>
-                    ) : (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {hasBoardPinout(selectedBoard.id) ? (
+                        <Link
+                          to={`/boards/${selectedBoard.id}`}
+                          className="inline-flex items-center gap-1 text-sm text-accent-cyan hover:underline"
+                        >
+                          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="4" y="4" width="16" height="16" rx="2" strokeWidth="2" />
+                            <line x1="4" y1="9" x2="2" y2="9" strokeWidth="2" />
+                            <line x1="20" y1="9" x2="22" y2="9" strokeWidth="2" />
+                          </svg>
+                          View board pinout
+                        </Link>
+                      ) : selectedBoard.pinoutUrl ? (
+                        <a
+                          href={selectedBoard.pinoutUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-sm text-accent-blue hover:underline"
+                        >
+                          View board pinout
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      ) : null}
                       <Link
                         to={`/pinouts/${selectedBoard.variant}`}
-                        className="mt-3 inline-flex items-center gap-1 text-sm text-accent-blue hover:underline"
+                        className="inline-flex items-center gap-1 text-sm text-accent-blue hover:underline"
                       >
                         View chip pinout
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </Link>
-                    )}
+                    </div>
                   </div>
                 )}
 
