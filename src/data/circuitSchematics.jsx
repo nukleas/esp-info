@@ -55,10 +55,10 @@ export const circuitSchematics = {
         <text x={170} y={72} fontSize={8} fontFamily="JetBrains Mono" fill="#00ffaa" textAnchor="middle">AMS1117</text>
         <text x={170} y={85} fontSize={7} fontFamily="JetBrains Mono" fill={colors.muted} textAnchor="middle">3.3V</text>
 
-        {/* Pin labels */}
-        <text x={135} y={65} fontSize={6} fill={colors.muted}>VIN</text>
-        <text x={190} y={65} fontSize={6} fill={colors.muted} textAnchor="end">VOUT</text>
-        <text x={170} y={98} fontSize={6} fill={colors.muted} textAnchor="middle">GND</text>
+        {/* Pin labels - larger for readability */}
+        <text x={135} y={65} fontSize={9} fontFamily="JetBrains Mono" fill={colors.text} fontWeight="500">VIN</text>
+        <text x={190} y={65} fontSize={9} fontFamily="JetBrains Mono" fill={colors.text} textAnchor="end" fontWeight="500">VOUT</text>
+        <text x={170} y={98} fontSize={9} fontFamily="JetBrains Mono" fill={colors.text} textAnchor="middle" fontWeight="500">GND</text>
 
         {/* Output wire */}
         {animated ? (
@@ -83,9 +83,9 @@ export const circuitSchematics = {
         <Junction x={170} y={130} color={colors.ground} />
         <Components.Ground x={170} y={145} />
 
-        {/* Info labels */}
-        <text x={60} y={175} fontSize={7} fill={colors.muted}>Input: 4.5-15V</text>
-        <text x={200} y={175} fontSize={7} fill={colors.muted}>Output: 3.3V @ 800mA</text>
+        {/* Info labels - larger */}
+        <text x={60} y={175} fontSize={9} fontFamily="JetBrains Mono" fill={colors.text}>Input: 4.5-15V</text>
+        <text x={200} y={175} fontSize={9} fontFamily="JetBrains Mono" fill={colors.text}>Output: 3.3V @ 800mA</text>
       </g>
     ),
   },
@@ -322,8 +322,8 @@ export const circuitSchematics = {
 
         {/* ESP32 Chip */}
         <rect x={150} y={90} width={100} height={70} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} style={{ filter: 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.5))' }} />
-        <text x={200} y={120} fontSize={10} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
-        <text x={200} y={135} fontSize={7} fontFamily="JetBrains Mono" fill={colors.muted} textAnchor="middle">VDD Pins</text>
+        <text x={200} y={120} fontSize={12} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle" fontWeight="bold">ESP32</text>
+        <text x={200} y={135} fontSize={9} fontFamily="JetBrains Mono" fill={colors.text} textAnchor="middle">VDD Pins</text>
 
         {/* Power connections to chip */}
         <Wire points={[{ x: 170, y: 60 }, { x: 170, y: 90 }]} color={colors.power} />
@@ -345,7 +345,7 @@ export const circuitSchematics = {
 
         {/* EN pin cap */}
         <Wire points={[{ x: 250, y: 110 }, { x: 300, y: 110 }]} color={colors.gpio} />
-        <Label x={255} y={108} text="EN" size={7} color={colors.muted} />
+        <Label x={255} y={108} text="EN" size={10} color={colors.text} />
         <Components.Capacitor x={270} y={110} value="10uF" label="C3" />
         <Wire points={[{ x: 300, y: 140 }, { x: 300, y: 180 }]} />
 
@@ -398,7 +398,7 @@ export const circuitSchematics = {
         <rect x={200} y={90} width={80} height={70} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} style={{ filter: 'drop-shadow(0 0 6px rgba(59, 130, 246, 0.4))' }} />
         <text x={240} y={120} fontSize={9} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
         <text x={205} y={105} fontSize={6} fill={colors.muted}>EN</text>
-        <text x={205} y={150} fontSize={6} fill={colors.muted}>GPIO0</text>
+        <text x={205} y={150} fontSize={10} fontFamily="JetBrains Mono" fill={colors.text} fontWeight="500">GPIO0</text>
 
         {/* GPIO0 line (internal pullup shown) */}
         <Wire points={[{ x: 200, y: 145 }, { x: 180, y: 145 }]} color={colors.gpio} />
@@ -512,7 +512,7 @@ export const circuitSchematics = {
         {/* ESP32 */}
         <rect x={180} y={100} width={70} height={45} rx={4} fill="#1a2332" stroke={colors.gpio} strokeWidth={2} />
         <text x={215} y={120} fontSize={8} fontFamily="JetBrains Mono" fill={colors.gpio} textAnchor="middle">ESP32</text>
-        <text x={215} y={135} fontSize={7} fill={colors.muted} textAnchor="middle">GPIO4</text>
+        <text x={215} y={135} fontSize={10} fontFamily="JetBrains Mono" fill={colors.text} textAnchor="middle" fontWeight="500">GPIO4</text>
 
         {/* Button */}
         <Wire points={[{ x: 80, y: 120 }, { x: 80, y: 135 }]} />
@@ -604,8 +604,8 @@ export const circuitSchematics = {
 
         {/* To ADC */}
         <Wire points={[{ x: 100, y: 100 }, { x: 200, y: 100 }]} color={colors.gpio} />
-        <Label x={210} y={95} text="GPIO34" size={8} color={colors.gpio} anchor="start" />
-        <Label x={210} y={107} text="(ADC1_CH6)" size={7} color={colors.muted} anchor="start" />
+        <Label x={210} y={95} text="GPIO34" size={11} color={colors.gpio} anchor="start" />
+        <Label x={210} y={107} text="(ADC1_CH6)" size={9} color={colors.text} anchor="start" />
 
         {/* R2 */}
         <Wire points={[{ x: 100, y: 100 }, { x: 100, y: 120 }]} />

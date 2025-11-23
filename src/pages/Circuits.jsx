@@ -104,7 +104,7 @@ function CircuitDetailPanel({ circuit }) {
         {/* Interactive SVG Schematic - Prominent placement */}
         {schematic && (
           <div className="card-glow">
-            <h3 className="text-lg font-semibold text-accent-cyan mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-accent-cyan mb-6 flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
               </svg>
@@ -114,15 +114,21 @@ function CircuitDetailPanel({ circuit }) {
                 Animated
               </span>
             </h3>
-            <div className="flex justify-center">
+            <div className="w-full rounded-lg" style={{ minHeight: '500px', maxHeight: '85vh', height: 'min(85vh, max(500px, 60vw))' }}>
               <CircuitDiagram
                 width={schematic.width}
                 height={schematic.height}
                 animated={true}
+                zoomable={true}
+                initialZoom={1.0}
+                responsive={true}
               >
                 {schematic.render({ animated: true })}
               </CircuitDiagram>
             </div>
+            <p className="text-xs text-text-muted mt-6 text-center">
+              💡 Use mouse wheel to zoom, drag to pan, or click fullscreen for detailed view
+            </p>
           </div>
         )}
 
@@ -239,7 +245,7 @@ function CircuitDetailPanel({ circuit }) {
 
         {/* Warnings */}
         {circuit.warnings && circuit.warnings.length > 0 && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+          <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6">
             <h3 className="text-base font-semibold text-red-400 mb-3 flex items-center gap-2">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -341,9 +347,9 @@ export default function Circuits() {
   return (
     <div className="h-[calc(100vh-64px)] flex">
       {/* Sidebar */}
-      <div className={`flex-shrink-0 bg-bg-secondary border-r border-white/10 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'w-0 overflow-hidden' : 'w-80'}`}>
+      <div className={`flex-shrink-0 bg-bg-secondary border-r-2 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'w-0 overflow-hidden' : 'w-64 lg:w-72'}`} style={{ borderColor: 'var(--window-border-outer)' }}>
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b-2" style={{ borderColor: 'var(--window-border-outer)' }}>
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-lg font-bold">Circuits</h1>
             <span className="text-xs text-text-muted bg-bg-tertiary px-2 py-0.5 rounded">
@@ -358,7 +364,7 @@ export default function Circuits() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search..."
-              className="w-full px-3 py-2 pl-9 bg-bg-primary border border-white/10 rounded-lg text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent-blue/50 transition-colors"
+              className="w-full px-3 py-2 pl-9 cyber-input text-sm placeholder-text-muted"
             />
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted"
@@ -372,7 +378,7 @@ export default function Circuits() {
         </div>
 
         {/* Filters */}
-        <div className="p-3 border-b border-white/10 space-y-2">
+        <div className="p-3 border-b-2 space-y-2" style={{ borderColor: 'var(--window-border-outer)' }}>
           {/* Category filter */}
           <div className="flex flex-wrap gap-1">
             <button

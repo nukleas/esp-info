@@ -177,7 +177,8 @@ export default function GlobalSearch() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 bg-bg-tertiary rounded-lg text-text-muted hover:text-text-primary hover:bg-bg-secondary transition-all duration-200 text-sm"
+        className="flex items-center gap-2 px-3 py-1.5 bg-bg-tertiary text-text-muted hover:text-text-primary hover:bg-bg-secondary transition-all duration-200 text-sm"
+        style={{ border: '1px solid var(--window-border-outer)', borderRadius: 0 }}
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -203,10 +204,7 @@ export default function GlobalSearch() {
 
       {/* Search Modal */}
       <div className="fixed top-[10%] left-1/2 -translate-x-1/2 w-full max-w-2xl z-50 px-4">
-        <div
-          className="bg-bg-secondary border border-white/10 rounded-xl shadow-2xl overflow-hidden"
-          style={{ boxShadow: '0 0 40px rgba(0, 212, 255, 0.1)' }}
-        >
+        <div className="cyber-window overflow-hidden">
           {/* Search Input */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
             <svg className="w-5 h-5 text-accent-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useId } from 'react'
+import { useState, useEffect, useId, useRef } from 'react'
 
 /**
  * CircuitDiagram - Interactive SVG circuit schematic with cyberpunk styling
@@ -73,10 +73,11 @@ const ComponentSymbols = {
           <text
             x={horizontal ? x + 30 : x + 12}
             y={horizontal ? y - 10 : y + 30}
-            fontSize={9}
+            fontSize={11}
             fontFamily="JetBrains Mono, monospace"
             fill={colors.text}
             textAnchor="middle"
+            fontWeight="500"
           >
             {value}
           </text>
@@ -86,7 +87,7 @@ const ComponentSymbols = {
           <text
             x={horizontal ? x + 30 : x - 12}
             y={horizontal ? y + 18 : y + 30}
-            fontSize={8}
+            fontSize={10}
             fontFamily="JetBrains Mono, monospace"
             fill={colors.textMuted}
             textAnchor="middle"
@@ -622,21 +623,166 @@ export default function CircuitDiagram({
   height = 250,
   animated = true,
   showGrid = false,
-  children
+  children,
+  zoomable = true,
+  initialZoom = 1.0,
+  responsive = false
 }) {
   const [hoveredComponent, setHoveredComponent] = useState(null)
+  const [zoom, setZoom] = useState(initialZoom)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isPanning, setIsPanning] = useState(false)
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 })
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const svgRef = useRef(null)
+  const containerRef = useRef(null)
   const id = useId()
 
-  return (
-    <div className="relative">
+  // Zoom controls
+  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.25, 3))
+  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.25, 0.5))
+  const handleZoomReset = () => {
+    setZoom(initialZoom)
+    setPan({ x: 0, y: 0 })
+  }
+
+  // Pan controls
+  const handleMouseDown = (e) => {
+    if (!zoomable || e.button !== 0) return
+    setIsPanning(true)
+    setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y })
+  }
+
+  const handleMouseMove = (e) => {
+    if (!isPanning) return
+    setPan({
+      x: e.clientX - panStart.x,
+      y: e.clientY - panStart.y
+    })
+  }
+
+  const handleMouseUp = () => {
+    setIsPanning(false)
+  }
+
+  // Wheel zoom
+  const handleWheel = (e) => {
+    if (!zoomable) return
+    e.preventDefault()
+    const delta = e.deltaY > 0 ? -0.1 : 0.1
+    setZoom(prev => Math.max(0.5, Math.min(3, prev + delta)))
+  }
+
+  // Fullscreen toggle
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen)
+    if (!isFullscreen) {
+      setZoom(1.5) // Zoom in when entering fullscreen
+    } else {
+      setZoom(initialZoom)
+      setPan({ x: 0, y: 0 })
+    }
+  }
+
+  // Calculate responsive dimensions
+  const containerStyle = responsive ? {
+    width: '100%',
+    height: '100%',
+    minHeight: '500px',
+    aspectRatio: `${width} / ${height}`,
+    maxWidth: '100%'
+  } : {
+    width: isFullscreen ? '100%' : '100%',
+    height: isFullscreen ? '100%' : '100%',
+    minHeight: isFullscreen ? 'auto' : `${height}px`
+  }
+
+  const svgContent = (
+    <div 
+      className={`relative bg-bg-primary overflow-hidden ${
+        isFullscreen ? 'fixed inset-4 z-50 cyber-window' : 'cyber-panel'
+      }`}
+      style={{
+        cursor: isPanning ? 'grabbing' : (zoomable ? 'grab' : 'default'),
+        ...containerStyle,
+        borderRadius: 0
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      onWheel={handleWheel}
+      ref={containerRef}
+    >
+      {/* Controls */}
+      {zoomable && (
+        <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
+          <button
+            onClick={handleZoomIn}
+            className="bg-bg-secondary/90 backdrop-blur-sm border border-white/20 rounded p-1.5 hover:bg-bg-tertiary transition-colors"
+            title="Zoom In"
+          >
+            <svg className="w-4 h-4 text-accent-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="bg-bg-secondary/90 backdrop-blur-sm border border-white/20 rounded p-1.5 hover:bg-bg-tertiary transition-colors"
+            title="Zoom Out"
+          >
+            <svg className="w-4 h-4 text-accent-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+            </svg>
+          </button>
+          <button
+            onClick={handleZoomReset}
+            className="bg-bg-secondary/90 backdrop-blur-sm border border-white/20 rounded p-1.5 hover:bg-bg-tertiary transition-colors"
+            title="Reset Zoom"
+          >
+            <svg className="w-4 h-4 text-accent-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+          <button
+            onClick={toggleFullscreen}
+            className="bg-bg-secondary/90 backdrop-blur-sm border border-white/20 rounded p-1.5 hover:bg-bg-tertiary transition-colors"
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          >
+            <svg className="w-4 h-4 text-accent-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {isFullscreen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              )}
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* Zoom indicator */}
+      {zoomable && zoom !== initialZoom && (
+        <div className="absolute bottom-2 left-2 z-10 bg-bg-secondary/90 backdrop-blur-sm border border-white/20 rounded px-2 py-1 text-xs text-accent-cyan font-mono">
+          {Math.round(zoom * 100)}%
+        </div>
+      )}
+
       <svg
+        ref={svgRef}
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full bg-bg-primary rounded-lg border border-white/10"
+        className="w-full h-full"
+        preserveAspectRatio={responsive ? "xMidYMid meet" : "none"}
         style={{
-          maxWidth: `${width}px`,
-          boxShadow: '0 0 30px rgba(0, 212, 255, 0.1), inset 0 0 60px rgba(0, 0, 0, 0.5)'
+          overflow: 'visible',
+          display: 'block'
         }}
       >
+        <g
+          transform={`translate(${width/2 + pan.x/zoom}, ${height/2 + pan.y/zoom}) scale(${zoom}) translate(${-width/2}, ${-height/2})`}
+          style={{
+            transition: isPanning ? 'none' : 'transform 0.1s ease-out'
+          }}
+        >
         <defs>
           {/* Glow filter */}
           <filter id={`glow-${id}`} x="-50%" y="-50%" width="200%" height="200%">
@@ -699,6 +845,7 @@ export default function CircuitDiagram({
         ) : (
           children
         )}
+        </g>
       </svg>
 
       {/* Tooltip */}
@@ -717,6 +864,18 @@ export default function CircuitDiagram({
       )}
     </div>
   )
+
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="relative w-full h-full max-w-[95vw] max-h-[95vh]">
+          {svgContent}
+        </div>
+      </div>
+    )
+  }
+
+  return svgContent
 }
 
 // Export components for custom diagrams

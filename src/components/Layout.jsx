@@ -15,11 +15,11 @@ export default function Layout({ children }) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="sticky top-0 z-50 h-16 bg-bg-secondary/90 backdrop-blur-sm border-b border-white/10">
+      <header className="sticky top-0 z-50 h-16 bg-bg-secondary/95 backdrop-blur-sm cyber-nav">
         <nav className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-accent-blue font-semibold text-lg">
             <svg className="w-8 h-8" viewBox="0 0 32 32" fill="none">
-              <rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" strokeWidth="2"/>
+              <rect x="4" y="8" width="24" height="16" rx="0" stroke="currentColor" strokeWidth="2"/>
               <circle cx="10" cy="16" r="2" fill="currentColor"/>
               <circle cx="16" cy="16" r="2" fill="currentColor"/>
               <circle cx="22" cy="16" r="2" fill="currentColor"/>
@@ -45,11 +45,7 @@ export default function Layout({ children }) {
                   <li key={to}>
                     <Link
                       to={to}
-                      className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                        isActive
-                          ? 'bg-accent-blue/20 text-accent-blue'
-                          : 'text-text-secondary hover:text-text-primary hover:bg-white/5'
-                      }`}
+                      className={`cyber-nav-link ${isActive ? 'active' : 'text-text-secondary hover:text-text-primary'}`}
                     >
                       {label}
                     </Link>
@@ -61,11 +57,11 @@ export default function Layout({ children }) {
         </nav>
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 cyber-container">
         {children}
       </main>
 
-      <footer className="border-t border-white/10 py-8 mt-16">
+      <footer className="border-t-2 py-8 mt-16 cyber-container" style={{ borderColor: 'var(--window-border-outer)' }}>
         <div className="max-w-7xl mx-auto px-4 text-center text-text-muted text-sm">
           <p>
             ESP32 specifications from{' '}

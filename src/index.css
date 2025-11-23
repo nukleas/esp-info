@@ -15,6 +15,12 @@
   --glow-blue: rgba(0, 212, 255, 0.4);
   --glow-cyan: rgba(0, 255, 170, 0.4);
   --border: rgba(0, 212, 255, 0.2);
+  
+  /* Cyberdeck/Tablet specific */
+  --window-border-outer: rgba(0, 212, 255, 0.3);
+  --window-border-inner: rgba(0, 255, 170, 0.15);
+  --panel-inset: rgba(0, 0, 0, 0.4);
+  --panel-glow: rgba(0, 212, 255, 0.15);
 }
 
 * {
@@ -29,10 +35,29 @@ body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background-color: var(--bg-primary);
+  background-image: 
+    linear-gradient(rgba(0, 212, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
   color: var(--text-primary);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 255, 170, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 code, pre, .font-mono {
@@ -71,30 +96,260 @@ code, pre, .font-mono {
 }
 
 @layer components {
-  .card {
-    @apply bg-bg-tertiary border border-white/10 rounded-lg p-6;
+  /* Cyberdeck Window Panel - Main reusable component */
+  .cyber-panel {
+    @apply bg-bg-tertiary p-6;
     @apply transition-all duration-200 ease-in-out;
+    position: relative;
+    border: 1px solid var(--window-border-outer);
+    border-radius: 2px;
+    box-shadow: 
+      0 0 0 1px var(--window-border-inner) inset,
+      0 2px 8px rgba(0, 0, 0, 0.5),
+      0 0 20px var(--panel-glow),
+      inset 0 1px 0 rgba(0, 212, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5);
   }
 
-  .card:hover {
-    @apply border-accent-blue/40 shadow-glow-blue;
+  .cyber-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      var(--accent-blue) 20%, 
+      var(--accent-blue) 80%, 
+      transparent 100%);
+    opacity: 0.3;
+  }
+
+  .cyber-panel:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 
+      0 0 0 1px var(--window-border-inner) inset,
+      0 2px 12px rgba(0, 0, 0, 0.6),
+      0 0 30px var(--glow-blue),
+      inset 0 1px 0 rgba(0, 212, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  /* Enhanced glow variant */
+  .cyber-panel-glow {
+    @apply cyber-panel;
+    border-color: var(--accent-cyan);
+    box-shadow: 
+      0 0 0 1px var(--window-border-inner) inset,
+      0 2px 8px rgba(0, 0, 0, 0.5),
+      0 0 30px rgba(0, 255, 170, 0.2),
+      inset 0 1px 0 rgba(0, 255, 170, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .cyber-panel-glow::before {
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      var(--accent-cyan) 20%, 
+      var(--accent-cyan) 80%, 
+      transparent 100%);
+    opacity: 0.4;
+  }
+
+  /* Legacy card classes - now use cyber-panel styling */
+  .card {
+    @apply cyber-panel;
   }
 
   .card-glow {
-    @apply bg-bg-tertiary border border-accent-cyan/30 rounded-lg p-6;
-    @apply transition-all duration-200 ease-in-out;
-    box-shadow: 0 0 30px rgba(0, 255, 170, 0.1), inset 0 0 60px rgba(0, 0, 0, 0.3);
+    @apply cyber-panel-glow;
   }
 
+  /* Window frame - for sections/containers */
+  .cyber-window {
+    @apply bg-bg-secondary;
+    position: relative;
+    border: 2px solid var(--window-border-outer);
+    border-radius: 0;
+    box-shadow: 
+      0 0 0 1px var(--window-border-inner) inset,
+      0 4px 16px rgba(0, 0, 0, 0.6),
+      inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .cyber-window::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      var(--accent-blue) 0%, 
+      var(--accent-cyan) 50%, 
+      var(--accent-blue) 100%);
+    opacity: 0.5;
+  }
+
+  /* Sharp button styles */
   .btn-primary {
-    @apply bg-accent-blue text-bg-primary px-4 py-2 rounded-md font-medium;
+    @apply bg-accent-blue text-bg-primary px-4 py-2 font-medium;
     @apply transition-all duration-200 ease-in-out;
-    @apply hover:shadow-glow-blue hover:scale-105;
+    border: 1px solid var(--accent-blue);
+    border-radius: 0;
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.3) inset,
+      0 2px 4px rgba(0, 0, 0, 0.4),
+      0 0 15px var(--glow-blue);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.3) inset,
+      0 2px 6px rgba(0, 0, 0, 0.5),
+      0 0 25px var(--glow-blue);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.4) inset,
+      0 1px 2px rgba(0, 0, 0, 0.5);
   }
 
   .btn-secondary {
-    @apply bg-transparent border border-accent-blue text-accent-blue px-4 py-2 rounded-md font-medium;
+    @apply bg-transparent border text-accent-blue px-4 py-2 font-medium;
     @apply transition-all duration-200 ease-in-out;
-    @apply hover:bg-accent-blue/20;
+    border: 1px solid var(--accent-blue);
+    border-radius: 0;
+    box-shadow: 
+      0 0 0 1px rgba(0, 212, 255, 0.1) inset,
+      0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-secondary:hover {
+    background: rgba(0, 212, 255, 0.1);
+    box-shadow: 
+      0 0 0 1px rgba(0, 212, 255, 0.2) inset,
+      0 2px 6px rgba(0, 0, 0, 0.4),
+      0 0 15px var(--glow-blue);
+  }
+
+  /* Sharp input fields */
+  .cyber-input {
+    @apply bg-bg-primary border text-text-primary px-3 py-2;
+    border: 1px solid var(--window-border-outer);
+    border-radius: 0;
+    box-shadow: 
+      0 0 0 1px var(--window-border-inner) inset,
+      inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .cyber-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 
+      0 0 0 1px var(--accent-blue) inset,
+      0 0 15px var(--glow-blue),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Panel header - for section titles */
+  .cyber-header {
+    @apply text-accent-cyan font-semibold;
+    position: relative;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--window-border-outer);
+  }
+
+  .cyber-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 8px var(--accent-cyan);
+  }
+
+  /* Status indicator */
+  .cyber-status {
+    @apply inline-block w-2 h-2;
+    border-radius: 0;
+    background: var(--accent-cyan);
+    box-shadow: 
+      0 0 4px var(--accent-cyan),
+      0 0 8px var(--accent-cyan);
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+  }
+
+  /* Divider line */
+  .cyber-divider {
+    @apply border-t;
+    border-color: var(--window-border-outer);
+    border-width: 1px;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+
+  .cyber-divider::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background: var(--accent-blue);
+    box-shadow: 0 0 4px var(--accent-blue);
+  }
+
+  /* Page container */
+  .cyber-container {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Navigation styling */
+  .cyber-nav {
+    border-bottom: 2px solid var(--window-border-outer);
+    box-shadow: 
+      0 2px 8px rgba(0, 0, 0, 0.4),
+      inset 0 -1px 0 var(--window-border-inner);
+  }
+
+  .cyber-nav-link {
+    @apply px-3 py-2 text-sm font-medium transition-all duration-200;
+    border: 1px solid transparent;
+    border-radius: 0;
+    position: relative;
+  }
+
+  .cyber-nav-link:hover {
+    background: rgba(0, 212, 255, 0.05);
+    border-color: var(--window-border-outer);
+  }
+
+  .cyber-nav-link.active {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    box-shadow: 
+      0 0 0 1px var(--accent-blue) inset,
+      0 0 10px rgba(0, 212, 255, 0.2);
+  }
+
+  .cyber-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent-blue);
+    box-shadow: 0 0 8px var(--accent-blue);
   }
 }
