@@ -7,6 +7,7 @@ const navLinks = [
   { to: '/pinouts', label: 'Pinouts' },
   { to: '/circuits', label: 'Circuits' },
   { to: '/boards', label: 'Boards' },
+  { to: '/libraries', label: 'Libraries' },
   { to: '/reference', label: 'Reference' },
 ]
 
