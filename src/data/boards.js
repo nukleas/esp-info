@@ -63,6 +63,7 @@ export const boards = [
     ],
     pros: ['Official reference', 'Best documentation', 'Most compatible'],
     cons: ['Slightly wide for breadboards', 'No battery support'],
+    pinoutUrl: 'https://docs.espressif.com/projects/esp-idf/en/latest/esp32/hw-reference/esp32/get-started-devkitc.html',
   },
   {
     id: 'esp32-devkitm-1',
@@ -103,6 +104,7 @@ export const boards = [
     price: '$8-12',
     pros: ['Smaller form factor', 'Breadboard friendly'],
     cons: ['Fewer GPIOs exposed', 'Less common'],
+    pinoutUrl: 'https://docs.espressif.com/projects/esp-idf/en/latest/esp32/hw-reference/esp32/get-started-devkitm-1.html',
   },
   {
     id: 'esp32-s3-devkitc-1',
@@ -150,6 +152,7 @@ export const boards = [
     ],
     pros: ['Native USB', 'AI acceleration', 'RGB LED', 'Octal PSRAM option'],
     cons: ['Too wide for breadboards', 'No DAC'],
+    pinoutUrl: 'https://docs.espressif.com/projects/esp-idf/en/latest/esp32s3/hw-reference/esp32s3/user-guide-devkitc-1.html',
   },
   {
     id: 'esp32-c3-devkitm-1',
@@ -190,6 +193,7 @@ export const boards = [
     price: '$8-12',
     pros: ['Very compact', 'RISC-V architecture', 'Low cost', 'USB-C'],
     cons: ['Single core', 'No touch sensors', 'Limited GPIOs'],
+    pinoutUrl: 'https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/hw-reference/esp32c3/user-guide-devkitm-1.html',
   },
   {
     id: 'esp32-c6-devkitc-1',
@@ -230,6 +234,7 @@ export const boards = [
     price: '$10-15',
     pros: ['WiFi 6', 'Thread/Zigbee', 'Matter ready', 'Dual USB ports'],
     cons: ['Single core', 'No PSRAM support'],
+    pinoutUrl: 'https://docs.espressif.com/projects/esp-idf/en/latest/esp32c6/hw-reference/esp32c6/user-guide-devkitc-1.html',
   },
   {
     id: 'esp32-c5-devkitc-1',
@@ -270,6 +275,7 @@ export const boards = [
     price: '$15-20',
     pros: ['Dual-band WiFi 6', '5 GHz support', 'Thread/Zigbee', 'Matter ready'],
     cons: ['New to market', 'Limited documentation'],
+    pinoutUrl: 'https://docs.espressif.com/projects/esp-idf/en/latest/esp32c5/hw-reference/esp32c5/user-guide-devkitc-1.html',
   },
 
   // ============================================
@@ -321,6 +327,7 @@ export const boards = [
     price: '$5-10',
     pros: ['Extremely cheap', 'Camera included', 'SD card slot', 'PSRAM'],
     cons: ['Requires external programmer', 'Limited GPIOs', 'Gets hot'],
+    pinoutUrl: 'https://randomnerdtutorials.com/esp32-cam-ai-thinker-pinout/',
   },
   {
     id: 'freenove-esp32-wrover-cam',
@@ -362,6 +369,7 @@ export const boards = [
     price: '$10-15',
     pros: ['Built-in USB programmer', 'More GPIOs than ESP32-CAM', '8MB PSRAM', 'Better thermals'],
     cons: ['Larger than ESP32-CAM', 'Slightly more expensive'],
+    pinoutUrl: 'https://github.com/Freenove/Freenove_ESP32_WROVER_Board/blob/main/Datasheet/ESP32-WROVER-DEV.pdf',
   },
   {
     id: 'esp32-s3-eye',
@@ -398,6 +406,7 @@ export const boards = [
     price: '$25-35',
     pros: ['All-in-one AI kit', 'Multiple sensors', 'AI acceleration', 'Audio support'],
     cons: ['No breadboard pins', 'More expensive', 'Overkill for simple projects'],
+    pinoutUrl: 'https://github.com/espressif/esp-who/blob/master/docs/en/get-started/ESP32-S3-EYE_Getting_Started_Guide.md',
   },
 
   // ============================================
@@ -442,6 +451,7 @@ export const boards = [
     price: '$5-10',
     pros: ['Very cheap', 'Breadboard friendly', 'Widely available'],
     cons: ['Lower quality than official', 'Silkscreen errors possible'],
+    pinoutUrl: 'https://randomnerdtutorials.com/esp32-pinout-reference-gpios/',
   },
   {
     id: 'nodemcu-esp32',
@@ -482,6 +492,7 @@ export const boards = [
     price: '$6-12',
     pros: ['Breadboard friendly', 'Full pinout', 'Cheap'],
     cons: ['Quality varies by manufacturer', 'Some pin labeling inconsistencies'],
+    pinoutUrl: 'https://randomnerdtutorials.com/esp32-pinout-reference-gpios/',
   },
   {
     id: 'wemos-d1-mini-esp32',
@@ -524,6 +535,7 @@ export const boards = [
     price: '$5-10',
     pros: ['Very compact', 'D1 Mini shields compatible', 'Cheap'],
     cons: ['Fewer GPIOs', 'No BOOT button'],
+    pinoutUrl: 'https://www.wemos.cc/en/latest/d1/d1_mini_esp32.html',
   },
   {
     id: 'lolin-s3',
@@ -563,6 +575,7 @@ export const boards = [
     price: '$10-15',
     pros: ['Native USB', 'Lots of flash/PSRAM', 'Compact', 'Good value'],
     cons: ['No DAC', 'Third-party (less documentation)'],
+    pinoutUrl: 'https://www.wemos.cc/en/latest/s3/s3.html',
   },
 
   // ============================================
@@ -609,6 +622,7 @@ export const boards = [
     price: '$20-25',
     pros: ['LiPo charging', 'Feather ecosystem', 'Quality build', 'Good documentation'],
     cons: ['More expensive', 'Fewer GPIOs than DevKitC'],
+    pinoutUrl: 'https://learn.adafruit.com/adafruit-huzzah32-esp32-feather/pinouts',
   },
   {
     id: 'adafruit-esp32-s2-feather',
@@ -652,6 +666,7 @@ export const boards = [
     price: '$18-22',
     pros: ['Native USB', 'STEMMA QT', 'LiPo charging', 'CircuitPython support'],
     cons: ['No Bluetooth', 'Single core'],
+    pinoutUrl: 'https://learn.adafruit.com/adafruit-esp32-s2-feather/pinouts',
   },
   {
     id: 'adafruit-esp32-s3-feather',
@@ -695,6 +710,7 @@ export const boards = [
     price: '$22-28',
     pros: ['Native USB', 'AI acceleration', 'Large PSRAM', 'Great for TinyML'],
     cons: ['Premium price', 'No DAC'],
+    pinoutUrl: 'https://learn.adafruit.com/adafruit-esp32-s3-feather/pinouts',
   },
 
   // ============================================
@@ -742,6 +758,7 @@ export const boards = [
     price: '$23-28',
     pros: ['USB-C', 'Qwiic connector', 'Large flash', 'LiPo charging'],
     cons: ['Premium price', 'No PSRAM'],
+    pinoutUrl: 'https://learn.sparkfun.com/tutorials/esp32-thing-plus-hookup-guide/all#hardware-overview',
   },
 
   // ============================================
@@ -785,6 +802,7 @@ export const boards = [
     price: '$3-6',
     pros: ['Extremely small', 'Very cheap', 'USB-C', 'Native USB'],
     cons: ['Very few GPIOs', 'Minimal features'],
+    pinoutUrl: 'https://www.nologo.tech/product/esp32/esp32c3SuperMini/esp32c3SuperMini.html',
   },
   {
     id: 'esp32-s3-supermini',
@@ -824,6 +842,7 @@ export const boards = [
     price: '$5-10',
     pros: ['Very compact', 'Dual core', 'Native USB', 'AI acceleration'],
     cons: ['Limited GPIOs', 'Quality varies'],
+    pinoutUrl: 'https://www.nologo.tech/product/esp32/esp32s3SuperMini/esp32S3SuperMini.html',
   },
 ]
 

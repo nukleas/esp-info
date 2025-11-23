@@ -5,6 +5,7 @@ import Compare from './pages/Compare'
 import Pinouts from './pages/Pinouts'
 import Circuits from './pages/Circuits'
 import Boards from './pages/Boards'
+import BoardDetail from './pages/BoardDetail'
 import Reference from './pages/Reference'
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/pinouts/:variantId" element={<Pinouts />} />
         <Route path="/circuits" element={<Circuits />} />
         <Route path="/boards" element={<Boards />} />
+        <Route path="/boards/:boardId" element={<BoardDetail />} />
         <Route path="/reference" element={<Reference />} />
       </Routes>
     </Layout>
